@@ -1,0 +1,64 @@
+================================================================================
+LSH FEATURE-HASH ANALYSIS REPORT
+================================================================================
+
+CONFIGURATION
+----------------------------------------
+Hash Size: 3
+Num Hash Tables: 15
+Top K: 2
+Collision Precision: 0.501
+Collision Recall: 0.808
+Balance Score (F1): 0.618
+
+Config Selection Note:
+  Balance score = F1(collision_precision, collision_recall)
+  This measures hash bucket quality directly, not classification accuracy.
+
+OVERALL PERFORMANCE
+----------------------------------------
+Mean Accuracy: 1.000 ± 0.000
+Collision Precision: 0.508 ± 0.004
+Collision Recall: 0.823 ± 0.017
+
+FEATURE IMPORTANCE RANKING
+----------------------------------------
+Rank  Feature                   Score    Hash     Discrim  CollQ   
+----------------------------------------------------------------------
+1     sum_angle                 0.913    0.826    1.000    1.000   
+2     straightness              0.845    0.855    0.836    0.803   
+3     total_path_length         0.775    0.779    0.771    0.847   
+4     min_body_distance         0.756    0.966    0.546    0.457   
+5     hand_contact_binary       0.721    1.000    0.441    0.435   
+6     velocity_std              0.719    0.750    0.688    0.400   
+7     aperture_std              0.691    0.686    0.696    0.452   
+8     mean_velocity             0.690    0.862    0.519    0.326   
+9     max_acceleration          0.677    0.798    0.557    0.267   
+10    acceleration_std          0.666    0.667    0.664    0.319   
+11    max_velocity              0.660    0.876    0.445    0.188   
+12    best_signed_value         0.649    0.839    0.460    0.326   
+13    aperture_range            0.648    0.886    0.410    0.348   
+14    hand_contact_frames       0.633    0.931    0.335    0.317   
+15    min_hand_distance         0.563    0.782    0.344    0.233   
+16    min_velocity              0.552    0.806    0.298    0.341   
+17    mean_acceleration         0.550    0.600    0.499    0.275   
+18    aperture_change           0.543    0.795    0.290    0.248   
+19    min_acceleration          0.518    0.671    0.366    0.197   
+20    max_rotation              0.513    0.980    0.047    0.224   
+21    best_dim                  0.483    0.932    0.033    0.000   
+22    sum_rotation              0.467    0.650    0.284    0.129   
+23    best_region               0.409    0.779    0.039    0.138   
+24    max_angle                 0.372    0.732    0.012    0.069   
+25    body_contact_frames       0.096    0.000    0.192    0.039   
+26    body_contact_binary       0.061    0.122    0.000    0.249   
+
+================================================================================
+INTERPRETATION
+================================================================================
+
+Top 3 features driving LSH clustering: sum_angle, straightness, total_path_length
+
+These features have:
+  1. High contribution to hash bit computations
+  2. Good class separation (telic vs atelic differ)
+  3. Quality collisions (same-class pairs are similar, diff-class pairs differ)

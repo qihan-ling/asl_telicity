@@ -1,0 +1,9 @@
+condition,accuracy,std,dropped_groups,n_features,accuracy_drop
+Drop A+B+C+D (Keep M only),0.76,0.058309518948453015,A_orientation+B_aperture+C_setting+D_contact,9.0,-0.07999999999999996
+Only A2+B3+C4+D2+M9 (Top 5 features),0.7100000000000001,0.08602325267042626,"All except A2, B3, C4, D2, M9",5.0,-0.030000000000000027
+Drop M (Motion),0.71,0.08000000000000003,M_motion,17.0,-0.029999999999999916
+Drop A (Orientation),0.7,0.04472135954999579,A_orientation,22.0,-0.019999999999999907
+Drop C (Setting),0.7,0.0632455532033676,C_setting,22.0,-0.019999999999999907
+Drop D (Contact),0.7,0.07071067811865477,D_contact,20.0,-0.019999999999999907
+Drop B (Aperture),0.69,0.037416573867739396,B_aperture,23.0,-0.009999999999999898
+All Features (Baseline),0.68,0.024494897427831747,None,,0.0

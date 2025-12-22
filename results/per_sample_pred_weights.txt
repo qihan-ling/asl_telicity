@@ -1,0 +1,1940 @@
+Loading data...
+Loaded 100 videos
+Class distribution: (array(['atelic', 'telic'], dtype='<U6'), array([50, 50]))
+
+Computing features (with normalization)...
+
+================================================================================
+SVM FEATURE WEIGHTS
+================================================================================
+            Feature    Weight  Abs_Weight
+  total_path_length -1.068234    1.068234
+      mean_velocity  0.870282    0.870282
+       min_velocity -0.866089    0.866089
+hand_contact_binary  0.860054    0.860054
+       aperture_std  0.755211    0.755211
+       max_velocity -0.597944    0.597944
+       velocity_std  0.487821    0.487821
+       straightness -0.427733    0.427733
+ hand_contact_ratio -0.368930    0.368930
+       max_rotation  0.330564    0.330564
+        num_regions -0.323660    0.323660
+     aperture_range  0.288451    0.288451
+       displacement  0.281955    0.281955
+  min_body_distance -0.260073    0.260073
+   min_acceleration  0.229018    0.229018
+  min_hand_distance  0.225818    0.225818
+    setting_changed  0.222475    0.222475
+    aperture_change -0.152400    0.152400
+   max_acceleration -0.101085    0.101085
+   acceleration_std  0.095077    0.095077
+ orientation_change -0.089046    0.089046
+         num_frames  0.039520    0.039520
+  mean_acceleration -0.025614    0.025614
+        path_length -0.012581    0.012581
+ body_contact_ratio  0.000000    0.000000
+body_contact_binary  0.000000    0.000000
+
+================================================================================
+PER-SAMPLE FEATURE CONTRIBUTIONS
+================================================================================
+
+================================================================================
+Sample atelic_29_cook.pkl: True=atelic, Predicted=telic
+Decision Value: 0.107 (positive→telic, negative→atelic)
+================================================================================
+
+Top 5 Features Pushing TOWARD Telic:
+  min_velocity                  : +0.854
+  total_path_length             : +0.677
+  hand_contact_binary           : +0.523
+  max_rotation                  : +0.281
+  num_regions                   : +0.238
+
+Top 5 Features Pushing TOWARD Atelic:
+  mean_velocity                 : -1.040
+  hand_contact_ratio            : -0.401
+  max_velocity                  : -0.399
+  min_acceleration              : -0.213
+  setting_changed               : -0.167
+
+================================================================================
+Sample telic_3.pkl: True=telic, Predicted=telic
+Decision Value: 1.988 (positive→telic, negative→atelic)
+================================================================================
+
+Top 5 Features Pushing TOWARD Telic:
+  aperture_std                  : +1.082
+  min_velocity                  : +0.619
+  hand_contact_binary           : +0.523
+  max_velocity                  : +0.514
+  aperture_range                : +0.473
+
+Top 5 Features Pushing TOWARD Atelic:
+  mean_velocity                 : -0.678
+  velocity_std                  : -0.422
+  num_regions                   : -0.405
+  aperture_change               : -0.397
+  straightness                  : -0.183
+
+================================================================================
+Sample atelic_32_laugh.pkl: True=atelic, Predicted=atelic
+Decision Value: -1.156 (positive→telic, negative→atelic)
+================================================================================
+
+Top 5 Features Pushing TOWARD Telic:
+  min_velocity                  : +0.540
+  hand_contact_ratio            : +0.463
+  straightness                  : +0.390
+  setting_changed               : +0.297
+  min_body_distance             : +0.099
+
+Top 5 Features Pushing TOWARD Atelic:
+  hand_contact_binary           : -1.414
+  total_path_length             : -0.555
+  num_regions                   : -0.405
+  max_rotation                  : -0.194
+  min_acceleration              : -0.118
+
+================================================================================
+Sample atelic_49_fly.pkl: True=atelic, Predicted=atelic
+Decision Value: -1.000 (positive→telic, negative→atelic)
+================================================================================
+
+Top 5 Features Pushing TOWARD Telic:
+  min_hand_distance             : +0.517
+  hand_contact_ratio            : +0.463
+  aperture_std                  : +0.360
+  displacement                  : +0.348
+  total_path_length             : +0.325
+
+Top 5 Features Pushing TOWARD Atelic:
+  hand_contact_binary           : -1.414
+  num_regions                   : -1.049
+  straightness                  : -0.814
+  min_velocity                  : -0.399
+  max_rotation                  : -0.227
+
+================================================================================
+Sample telic_12_build_house.pkl: True=telic, Predicted=atelic
+Decision Value: -0.312 (positive→telic, negative→atelic)
+================================================================================
+
+Top 5 Features Pushing TOWARD Telic:
+  total_path_length             : +0.629
+  max_velocity                  : +0.586
+  hand_contact_binary           : +0.523
+  aperture_std                  : +0.302
+  setting_changed               : +0.297
+
+Top 5 Features Pushing TOWARD Atelic:
+  min_velocity                  : -0.709
+  velocity_std                  : -0.499
+  hand_contact_ratio            : -0.479
+  min_body_distance             : -0.423
+  num_regions                   : -0.405
+
+================================================================================
+Sample atelic_24_fight.pkl: True=atelic, Predicted=atelic
+Decision Value: -1.123 (positive→telic, negative→atelic)
+================================================================================
+
+Top 5 Features Pushing TOWARD Telic:
+  min_velocity                  : +0.652
+  hand_contact_binary           : +0.523
+  straightness                  : +0.441
+  min_body_distance             : +0.385
+  num_regions                   : +0.238
+
+Top 5 Features Pushing TOWARD Atelic:
+  total_path_length             : -0.785
+  mean_velocity                 : -0.678
+  aperture_std                  : -0.620
+  velocity_std                  : -0.456
+  hand_contact_ratio            : -0.232
+
+================================================================================
+Sample telic_2.pkl: True=telic, Predicted=atelic
+Decision Value: -0.609 (positive→telic, negative→atelic)
+================================================================================
+
+Top 5 Features Pushing TOWARD Telic:
+  total_path_length             : +1.281
+  max_velocity                  : +0.913
+  min_velocity                  : +0.817
+  straightness                  : +0.535
+  min_hand_distance             : +0.517
+
+Top 5 Features Pushing TOWARD Atelic:
+  hand_contact_binary           : -1.414
+  mean_velocity                 : -1.317
+  aperture_std                  : -0.730
+  velocity_std                  : -0.729
+  aperture_range                : -0.374
+
+================================================================================
+Sample telic_26_fill_up.pkl: True=telic, Predicted=telic
+Decision Value: 0.999 (positive→telic, negative→atelic)
+================================================================================
+
+Top 5 Features Pushing TOWARD Telic:
+  velocity_std                  : +1.258
+  mean_velocity                 : +0.755
+  hand_contact_binary           : +0.523
+  straightness                  : +0.467
+  total_path_length             : +0.279
+
+Top 5 Features Pushing TOWARD Atelic:
+  max_velocity                  : -1.039
+  aperture_std                  : -0.465
+  max_acceleration              : -0.261
+  max_rotation                  : -0.254
+  displacement                  : -0.247
+
+================================================================================
+Sample telic_31_steal.pkl: True=telic, Predicted=telic
+Decision Value: 1.000 (positive→telic, negative→atelic)
+================================================================================
+
+Top 5 Features Pushing TOWARD Telic:
+  max_rotation                  : +1.065
+  straightness                  : +0.550
+  hand_contact_binary           : +0.523
+  min_velocity                  : +0.446
+  velocity_std                  : +0.434
+
+Top 5 Features Pushing TOWARD Atelic:
+  max_velocity                  : -1.027
+  num_regions                   : -0.405
+  total_path_length             : -0.381
+  displacement                  : -0.280
+  min_body_distance             : -0.139
+
+================================================================================
+Sample telic_41_check.pkl: True=telic, Predicted=atelic
+Decision Value: -0.530 (positive→telic, negative→atelic)
+================================================================================
+
+Top 5 Features Pushing TOWARD Telic:
+  total_path_length             : +1.151
+  hand_contact_binary           : +0.523
+  max_velocity                  : +0.296
+  num_regions                   : +0.238
+  min_body_distance             : +0.167
+
+Top 5 Features Pushing TOWARD Atelic:
+  aperture_std                  : -0.782
+  straightness                  : -0.782
+  aperture_range                : -0.382
+  hand_contact_ratio            : -0.356
+  max_rotation                  : -0.196
+
+================================================================================
+Sample telic_48_sting.pkl: True=telic, Predicted=atelic
+Decision Value: -0.564 (positive→telic, negative→atelic)
+================================================================================
+
+Top 5 Features Pushing TOWARD Telic:
+  mean_velocity                 : +2.273
+  min_acceleration              : +0.849
+  hand_contact_binary           : +0.523
+  velocity_std                  : +0.387
+  setting_changed               : +0.297
+
+Top 5 Features Pushing TOWARD Atelic:
+  min_velocity                  : -2.962
+  total_path_length             : -0.551
+  aperture_std                  : -0.494
+  max_velocity                  : -0.457
+  num_regions                   : -0.405
+
+================================================================================
+Sample telic_19_look_at.pkl: True=telic, Predicted=telic
+Decision Value: 1.782 (positive→telic, negative→atelic)
+================================================================================
+
+Top 5 Features Pushing TOWARD Telic:
+  aperture_std                  : +1.426
+  mean_velocity                 : +0.911
+  hand_contact_binary           : +0.523
+  velocity_std                  : +0.490
+  aperture_range                : +0.392
+
+Top 5 Features Pushing TOWARD Atelic:
+  total_path_length             : -0.580
+  hand_contact_ratio            : -0.437
+  aperture_change               : -0.414
+  num_regions                   : -0.405
+  straightness                  : -0.320
+
+================================================================================
+Sample telic_42_eat_up.pkl: True=telic, Predicted=atelic
+Decision Value: -1.606 (positive→telic, negative→atelic)
+================================================================================
+
+Top 5 Features Pushing TOWARD Telic:
+  mean_velocity                 : +0.829
+  min_hand_distance             : +0.517
+  hand_contact_ratio            : +0.463
+  displacement                  : +0.370
+  min_body_distance             : +0.366
+
+Top 5 Features Pushing TOWARD Atelic:
+  hand_contact_binary           : -1.414
+  min_velocity                  : -1.194
+  straightness                  : -0.923
+  aperture_std                  : -0.687
+  num_regions                   : -0.405
+
+================================================================================
+Sample telic_1.pkl: True=telic, Predicted=telic
+Decision Value: 0.607 (positive→telic, negative→atelic)
+================================================================================
+
+Top 5 Features Pushing TOWARD Telic:
+  total_path_length             : +1.138
+  max_velocity                  : +1.046
+  min_velocity                  : +0.768
+  hand_contact_binary           : +0.523
+  num_regions                   : +0.238
+
+Top 5 Features Pushing TOWARD Atelic:
+  mean_velocity                 : -1.233
+  velocity_std                  : -0.789
+  aperture_std                  : -0.527
+  displacement                  : -0.231
+  min_acceleration              : -0.187
+
+================================================================================
+Sample atelic_45_live.pkl: True=atelic, Predicted=atelic
+Decision Value: -0.356 (positive→telic, negative→atelic)
+================================================================================
+
+Top 5 Features Pushing TOWARD Telic:
+  total_path_length             : +1.566
+  min_velocity                  : +0.849
+  max_velocity                  : +0.813
+  hand_contact_binary           : +0.523
+  num_regions                   : +0.238
+
+Top 5 Features Pushing TOWARD Atelic:
+  mean_velocity                 : -1.238
+  aperture_std                  : -0.905
+  velocity_std                  : -0.609
+  hand_contact_ratio            : -0.479
+  aperture_range                : -0.449
+
+================================================================================
+Sample telic_5.pkl: True=telic, Predicted=telic
+Decision Value: 1.176 (positive→telic, negative→atelic)
+================================================================================
+
+Top 5 Features Pushing TOWARD Telic:
+  max_rotation                  : +1.074
+  min_velocity                  : +0.830
+  hand_contact_binary           : +0.523
+  total_path_length             : +0.323
+  straightness                  : +0.321
+
+Top 5 Features Pushing TOWARD Atelic:
+  mean_velocity                 : -1.118
+  hand_contact_ratio            : -0.479
+  velocity_std                  : -0.354
+  min_acceleration              : -0.205
+  displacement                  : -0.192
+
+================================================================================
+Sample atelic_41_write.pkl: True=atelic, Predicted=atelic
+Decision Value: -0.315 (positive→telic, negative→atelic)
+================================================================================
+
+Top 5 Features Pushing TOWARD Telic:
+  total_path_length             : +0.804
+  hand_contact_binary           : +0.523
+  min_velocity                  : +0.490
+  straightness                  : +0.438
+  num_regions                   : +0.238
+
+Top 5 Features Pushing TOWARD Atelic:
+  mean_velocity                 : -0.611
+  hand_contact_ratio            : -0.479
+  aperture_std                  : -0.394
+  min_body_distance             : -0.382
+  displacement                  : -0.306
+
+================================================================================
+Sample atelic_48_travel.pkl: True=atelic, Predicted=telic
+Decision Value: 0.141 (positive→telic, negative→atelic)
+================================================================================
+
+Top 5 Features Pushing TOWARD Telic:
+  min_velocity                  : +0.644
+  min_hand_distance             : +0.517
+  hand_contact_ratio            : +0.463
+  aperture_std                  : +0.423
+  straightness                  : +0.386
+
+Top 5 Features Pushing TOWARD Atelic:
+  hand_contact_binary           : -1.414
+  mean_velocity                 : -0.665
+  num_regions                   : -0.405
+  velocity_std                  : -0.326
+  displacement                  : -0.248
+
+================================================================================
+Sample telic_45_catch_up.pkl: True=telic, Predicted=telic
+Decision Value: 1.000 (positive→telic, negative→atelic)
+================================================================================
+
+Top 5 Features Pushing TOWARD Telic:
+  min_velocity                  : +0.697
+  hand_contact_binary           : +0.523
+  velocity_std                  : +0.517
+  total_path_length             : +0.505
+  aperture_std                  : +0.252
+
+Top 5 Features Pushing TOWARD Atelic:
+  max_velocity                  : -0.496
+  straightness                  : -0.423
+  aperture_change               : -0.197
+  setting_changed               : -0.167
+  min_acceleration              : -0.167
+
+================================================================================
+Sample atelic_13_explain.pkl: True=atelic, Predicted=atelic
+Decision Value: -1.646 (positive→telic, negative→atelic)
+================================================================================
+
+Top 5 Features Pushing TOWARD Telic:
+  min_velocity                  : +0.558
+  hand_contact_binary           : +0.523
+  straightness                  : +0.369
+  num_regions                   : +0.238
+  min_body_distance             : +0.182
+
+Top 5 Features Pushing TOWARD Atelic:
+  mean_velocity                 : -0.912
+  aperture_std                  : -0.671
+  hand_contact_ratio            : -0.410
+  aperture_range                : -0.350
+  velocity_std                  : -0.264
+
+================================================================================
+Sample telic_37_seize.pkl: True=telic, Predicted=telic
+Decision Value: 3.331 (positive→telic, negative→atelic)
+================================================================================
+
+Top 5 Features Pushing TOWARD Telic:
+  total_path_length             : +1.114
+  max_rotation                  : +0.593
+  hand_contact_binary           : +0.523
+  min_velocity                  : +0.429
+  max_velocity                  : +0.388
+
+Top 5 Features Pushing TOWARD Atelic:
+  displacement                  : -0.191
+  min_body_distance             : -0.186
+  setting_changed               : -0.167
+  min_hand_distance             : -0.094
+  min_acceleration              : -0.066
+
+================================================================================
+Sample telic_4.pkl: True=telic, Predicted=telic
+Decision Value: 5.372 (positive→telic, negative→atelic)
+================================================================================
+
+Top 5 Features Pushing TOWARD Telic:
+  aperture_std                  : +2.484
+  mean_velocity                 : +2.042
+  velocity_std                  : +1.206
+  total_path_length             : +0.656
+  aperture_range                : +0.531
+
+Top 5 Features Pushing TOWARD Atelic:
+  min_velocity                  : -1.584
+  max_velocity                  : -0.670
+  displacement                  : -0.275
+  aperture_change               : -0.265
+  min_body_distance             : -0.246
+
+================================================================================
+Sample atelic_20_study.pkl: True=atelic, Predicted=atelic
+Decision Value: -1.728 (positive→telic, negative→atelic)
+================================================================================
+
+Top 5 Features Pushing TOWARD Telic:
+  mean_velocity                 : +1.587
+  velocity_std                  : +0.813
+  straightness                  : +0.543
+  hand_contact_binary           : +0.523
+  min_body_distance             : +0.302
+
+Top 5 Features Pushing TOWARD Atelic:
+  total_path_length             : -4.528
+  max_velocity                  : -0.737
+  max_acceleration              : -0.220
+  aperture_change               : -0.171
+  setting_changed               : -0.167
+
+================================================================================
+Sample telic_6.pkl: True=telic, Predicted=atelic
+Decision Value: -1.024 (positive→telic, negative→atelic)
+================================================================================
+
+Top 5 Features Pushing TOWARD Telic:
+  hand_contact_binary           : +0.523
+  straightness                  : +0.476
+  max_rotation                  : +0.395
+  min_velocity                  : +0.395
+  setting_changed               : +0.297
+
+Top 5 Features Pushing TOWARD Atelic:
+  total_path_length             : -1.300
+  num_regions                   : -0.405
+  max_velocity                  : -0.383
+  mean_velocity                 : -0.345
+  orientation_change            : -0.234
+
+================================================================================
+Sample telic_16_guess.pkl: True=telic, Predicted=atelic
+Decision Value: -0.192 (positive→telic, negative→atelic)
+================================================================================
+
+Top 5 Features Pushing TOWARD Telic:
+  aperture_std                  : +0.847
+  min_velocity                  : +0.833
+  max_velocity                  : +0.735
+  displacement                  : +0.625
+  min_hand_distance             : +0.517
+
+Top 5 Features Pushing TOWARD Atelic:
+  hand_contact_binary           : -1.414
+  mean_velocity                 : -0.888
+  straightness                  : -0.558
+  velocity_std                  : -0.557
+  num_regions                   : -0.405
+
+================================================================================
+Sample atelic_44_proceed.pkl: True=atelic, Predicted=atelic
+Decision Value: -1.000 (positive→telic, negative→atelic)
+================================================================================
+
+Top 5 Features Pushing TOWARD Telic:
+  total_path_length             : +0.849
+  hand_contact_ratio            : +0.463
+  num_regions                   : +0.238
+  max_velocity                  : +0.176
+  velocity_std                  : +0.068
+
+Top 5 Features Pushing TOWARD Atelic:
+  hand_contact_binary           : -1.414
+  min_velocity                  : -0.307
+  aperture_range                : -0.247
+  max_rotation                  : -0.242
+  aperture_std                  : -0.220
+
+================================================================================
+Sample atelic_33_cry.pkl: True=atelic, Predicted=telic
+Decision Value: 0.366 (positive→telic, negative→atelic)
+================================================================================
+
+Top 5 Features Pushing TOWARD Telic:
+  min_velocity                  : +0.712
+  max_velocity                  : +0.706
+  hand_contact_binary           : +0.523
+  max_rotation                  : +0.476
+  setting_changed               : +0.297
+
+Top 5 Features Pushing TOWARD Atelic:
+  total_path_length             : -1.018
+  mean_velocity                 : -0.898
+  velocity_std                  : -0.585
+  num_regions                   : -0.405
+  orientation_change            : -0.204
+
+================================================================================
+Sample atelic_50_calculate.pkl: True=atelic, Predicted=atelic
+Decision Value: -1.370 (positive→telic, negative→atelic)
+================================================================================
+
+Top 5 Features Pushing TOWARD Telic:
+  velocity_std                  : +0.759
+  aperture_range                : +0.732
+  min_velocity                  : +0.548
+  aperture_std                  : +0.533
+  hand_contact_binary           : +0.523
+
+Top 5 Features Pushing TOWARD Atelic:
+  total_path_length             : -2.124
+  max_velocity                  : -1.596
+  hand_contact_ratio            : -0.479
+  max_acceleration              : -0.401
+  aperture_change               : -0.303
+
+================================================================================
+Sample telic_7.pkl: True=telic, Predicted=telic
+Decision Value: 1.561 (positive→telic, negative→atelic)
+================================================================================
+
+Top 5 Features Pushing TOWARD Telic:
+  max_rotation                  : +0.585
+  aperture_std                  : +0.582
+  velocity_std                  : +0.537
+  min_velocity                  : +0.529
+  hand_contact_binary           : +0.523
+
+Top 5 Features Pushing TOWARD Atelic:
+  max_velocity                  : -0.934
+  total_path_length             : -0.271
+  min_body_distance             : -0.256
+  max_acceleration              : -0.218
+  displacement                  : -0.201
+
+================================================================================
+Sample atelic_4.pkl: True=atelic, Predicted=atelic
+Decision Value: -0.965 (positive→telic, negative→atelic)
+================================================================================
+
+Top 5 Features Pushing TOWARD Telic:
+  total_path_length             : +0.671
+  hand_contact_binary           : +0.523
+  min_acceleration              : +0.450
+  max_velocity                  : +0.419
+  mean_velocity                 : +0.366
+
+Top 5 Features Pushing TOWARD Atelic:
+  min_velocity                  : -0.967
+  aperture_std                  : -0.840
+  hand_contact_ratio            : -0.479
+  aperture_range                : -0.424
+  velocity_std                  : -0.356
+
+================================================================================
+Sample telic_28_jump_over.pkl: True=telic, Predicted=telic
+Decision Value: 1.320 (positive→telic, negative→atelic)
+================================================================================
+
+Top 5 Features Pushing TOWARD Telic:
+  aperture_std                  : +1.288
+  mean_velocity                 : +0.672
+  aperture_range                : +0.668
+  max_rotation                  : +0.593
+  min_hand_distance             : +0.517
+
+Top 5 Features Pushing TOWARD Atelic:
+  hand_contact_binary           : -1.414
+  min_velocity                  : -1.344
+  num_regions                   : -0.405
+  velocity_std                  : -0.333
+  straightness                  : -0.241
+
+================================================================================
+Sample atelic_34_wait.pkl: True=atelic, Predicted=atelic
+Decision Value: -1.700 (positive→telic, negative→atelic)
+================================================================================
+
+Top 5 Features Pushing TOWARD Telic:
+  total_path_length             : +1.053
+  hand_contact_ratio            : +0.463
+  num_regions                   : +0.238
+  min_velocity                  : +0.145
+  orientation_change            : +0.048
+
+Top 5 Features Pushing TOWARD Atelic:
+  hand_contact_binary           : -1.414
+  aperture_std                  : -0.477
+  straightness                  : -0.369
+  mean_velocity                 : -0.311
+  max_rotation                  : -0.251
+
+================================================================================
+Sample atelic_15_like.pkl: True=atelic, Predicted=atelic
+Decision Value: -2.257 (positive→telic, negative→atelic)
+================================================================================
+
+Top 5 Features Pushing TOWARD Telic:
+  min_velocity                  : +0.919
+  min_hand_distance             : +0.517
+  hand_contact_ratio            : +0.463
+  num_regions                   : +0.238
+  total_path_length             : +0.090
+
+Top 5 Features Pushing TOWARD Atelic:
+  hand_contact_binary           : -1.414
+  mean_velocity                 : -1.088
+  max_velocity                  : -0.388
+  aperture_std                  : -0.354
+  max_rotation                  : -0.220
+
+================================================================================
+Sample atelic_5.pkl: True=atelic, Predicted=atelic
+Decision Value: -1.000 (positive→telic, negative→atelic)
+================================================================================
+
+Top 5 Features Pushing TOWARD Telic:
+  max_velocity                  : +0.879
+  min_velocity                  : +0.571
+  total_path_length             : +0.556
+  min_hand_distance             : +0.517
+  hand_contact_ratio            : +0.463
+
+Top 5 Features Pushing TOWARD Atelic:
+  hand_contact_binary           : -1.414
+  mean_velocity                 : -0.937
+  min_body_distance             : -0.776
+  velocity_std                  : -0.725
+  num_regions                   : -0.405
+
+================================================================================
+Sample telic_39_zip_up.pkl: True=telic, Predicted=telic
+Decision Value: 0.272 (positive→telic, negative→atelic)
+================================================================================
+
+Top 5 Features Pushing TOWARD Telic:
+  total_path_length             : +0.760
+  hand_contact_binary           : +0.523
+  mean_velocity                 : +0.344
+  num_regions                   : +0.238
+  velocity_std                  : +0.178
+
+Top 5 Features Pushing TOWARD Atelic:
+  aperture_std                  : -0.566
+  hand_contact_ratio            : -0.479
+  aperture_range                : -0.314
+  max_rotation                  : -0.270
+  setting_changed               : -0.167
+
+================================================================================
+Sample atelic_7.pkl: True=atelic, Predicted=atelic
+Decision Value: -0.617 (positive→telic, negative→atelic)
+================================================================================
+
+Top 5 Features Pushing TOWARD Telic:
+  mean_velocity                 : +0.868
+  displacement                  : +0.625
+  hand_contact_binary           : +0.523
+  velocity_std                  : +0.273
+  num_regions                   : +0.238
+
+Top 5 Features Pushing TOWARD Atelic:
+  min_velocity                  : -1.015
+  total_path_length             : -0.714
+  straightness                  : -0.682
+  max_velocity                  : -0.373
+  setting_changed               : -0.167
+
+================================================================================
+Sample telic_43_ruin.pkl: True=telic, Predicted=telic
+Decision Value: 1.032 (positive→telic, negative→atelic)
+================================================================================
+
+Top 5 Features Pushing TOWARD Telic:
+  total_path_length             : +1.150
+  hand_contact_binary           : +0.523
+  min_velocity                  : +0.506
+  num_regions                   : +0.238
+  velocity_std                  : +0.159
+
+Top 5 Features Pushing TOWARD Atelic:
+  hand_contact_ratio            : -0.479
+  setting_changed               : -0.167
+  aperture_std                  : -0.153
+  max_rotation                  : -0.148
+  min_body_distance             : -0.146
+
+================================================================================
+Sample atelic_43_shave.pkl: True=atelic, Predicted=atelic
+Decision Value: -2.437 (positive→telic, negative→atelic)
+================================================================================
+
+Top 5 Features Pushing TOWARD Telic:
+  min_velocity                  : +0.846
+  total_path_length             : +0.839
+  displacement                  : +0.538
+  hand_contact_ratio            : +0.463
+  min_body_distance             : +0.406
+
+Top 5 Features Pushing TOWARD Atelic:
+  hand_contact_binary           : -1.414
+  straightness                  : -1.380
+  aperture_std                  : -0.881
+  mean_velocity                 : -0.809
+  aperture_range                : -0.448
+
+================================================================================
+Sample atelic_40_sew_(by_machine).pkl: True=atelic, Predicted=atelic
+Decision Value: -0.599 (positive→telic, negative→atelic)
+================================================================================
+
+Top 5 Features Pushing TOWARD Telic:
+  hand_contact_binary           : +0.523
+  total_path_length             : +0.350
+  straightness                  : +0.293
+  num_regions                   : +0.238
+  min_velocity                  : +0.230
+
+Top 5 Features Pushing TOWARD Atelic:
+  max_velocity                  : -0.608
+  hand_contact_ratio            : -0.479
+  displacement                  : -0.249
+  mean_velocity                 : -0.230
+  aperture_std                  : -0.214
+
+================================================================================
+Sample atelic_14_know.pkl: True=atelic, Predicted=atelic
+Decision Value: -0.160 (positive→telic, negative→atelic)
+================================================================================
+
+Top 5 Features Pushing TOWARD Telic:
+  max_velocity                  : +1.013
+  min_velocity                  : +0.963
+  total_path_length             : +0.895
+  min_hand_distance             : +0.517
+  hand_contact_ratio            : +0.463
+
+Top 5 Features Pushing TOWARD Atelic:
+  hand_contact_binary           : -1.414
+  mean_velocity                 : -1.376
+  velocity_std                  : -0.788
+  num_regions                   : -0.405
+  straightness                  : -0.377
+
+================================================================================
+Sample telic_18_hit.pkl: True=telic, Predicted=atelic
+Decision Value: -0.291 (positive→telic, negative→atelic)
+================================================================================
+
+Top 5 Features Pushing TOWARD Telic:
+  mean_velocity                 : +0.599
+  hand_contact_binary           : +0.523
+  num_regions                   : +0.238
+  velocity_std                  : +0.214
+  displacement                  : +0.106
+
+Top 5 Features Pushing TOWARD Atelic:
+  min_velocity                  : -0.619
+  hand_contact_ratio            : -0.349
+  aperture_std                  : -0.276
+  setting_changed               : -0.167
+  aperture_range                : -0.128
+
+================================================================================
+Sample atelic_6.pkl: True=atelic, Predicted=atelic
+Decision Value: -1.620 (positive→telic, negative→atelic)
+================================================================================
+
+Top 5 Features Pushing TOWARD Telic:
+  min_hand_distance             : +0.517
+  max_velocity                  : +0.500
+  hand_contact_ratio            : +0.463
+  mean_velocity                 : +0.325
+  setting_changed               : +0.297
+
+Top 5 Features Pushing TOWARD Atelic:
+  hand_contact_binary           : -1.414
+  aperture_std                  : -0.478
+  num_regions                   : -0.405
+  min_velocity                  : -0.320
+  max_rotation                  : -0.306
+
+================================================================================
+Sample telic_40_take_from.pkl: True=telic, Predicted=telic
+Decision Value: 2.545 (positive→telic, negative→atelic)
+================================================================================
+
+Top 5 Features Pushing TOWARD Telic:
+  aperture_std                  : +1.777
+  total_path_length             : +1.318
+  aperture_range                : +0.710
+  max_rotation                  : +0.666
+  max_velocity                  : +0.664
+
+Top 5 Features Pushing TOWARD Atelic:
+  hand_contact_binary           : -1.414
+  straightness                  : -0.536
+  min_body_distance             : -0.513
+  aperture_change               : -0.420
+  mean_velocity                 : -0.399
+
+================================================================================
+Sample atelic_42_follow.pkl: True=atelic, Predicted=atelic
+Decision Value: -0.415 (positive→telic, negative→atelic)
+================================================================================
+
+Top 5 Features Pushing TOWARD Telic:
+  total_path_length             : +1.049
+  hand_contact_binary           : +0.523
+  max_velocity                  : +0.504
+  num_regions                   : +0.238
+  aperture_change               : +0.119
+
+Top 5 Features Pushing TOWARD Atelic:
+  aperture_std                  : -0.741
+  straightness                  : -0.524
+  aperture_range                : -0.378
+  hand_contact_ratio            : -0.308
+  max_rotation                  : -0.297
+
+================================================================================
+Sample atelic_27_search.pkl: True=atelic, Predicted=atelic
+Decision Value: -0.850 (positive→telic, negative→atelic)
+================================================================================
+
+Top 5 Features Pushing TOWARD Telic:
+  mean_velocity                 : +1.021
+  hand_contact_binary           : +0.523
+  setting_changed               : +0.297
+  min_acceleration              : +0.257
+  displacement                  : +0.234
+
+Top 5 Features Pushing TOWARD Atelic:
+  min_velocity                  : -1.400
+  aperture_std                  : -0.670
+  num_regions                   : -0.405
+  aperture_range                : -0.368
+  max_rotation                  : -0.273
+
+================================================================================
+Sample atelic_2.pkl: True=atelic, Predicted=atelic
+Decision Value: -0.991 (positive→telic, negative→atelic)
+================================================================================
+
+Top 5 Features Pushing TOWARD Telic:
+  total_path_length             : +0.524
+  max_velocity                  : +0.484
+  hand_contact_ratio            : +0.463
+  num_regions                   : +0.238
+  max_acceleration              : +0.101
+
+Top 5 Features Pushing TOWARD Atelic:
+  hand_contact_binary           : -1.414
+  velocity_std                  : -0.326
+  straightness                  : -0.210
+  mean_velocity                 : -0.199
+  aperture_std                  : -0.175
+
+================================================================================
+Sample telic_38_close_door.pkl: True=telic, Predicted=telic
+Decision Value: 1.927 (positive→telic, negative→atelic)
+================================================================================
+
+Top 5 Features Pushing TOWARD Telic:
+  total_path_length             : +0.708
+  hand_contact_binary           : +0.523
+  mean_velocity                 : +0.413
+  straightness                  : +0.264
+  num_regions                   : +0.238
+
+Top 5 Features Pushing TOWARD Atelic:
+  max_rotation                  : -0.224
+  min_velocity                  : -0.197
+  setting_changed               : -0.167
+  displacement                  : -0.165
+  min_hand_distance             : -0.102
+
+================================================================================
+Sample atelic_17_play.pkl: True=atelic, Predicted=atelic
+Decision Value: -1.899 (positive→telic, negative→atelic)
+================================================================================
+
+Top 5 Features Pushing TOWARD Telic:
+  min_velocity                  : +0.888
+  hand_contact_binary           : +0.523
+  straightness                  : +0.487
+  num_regions                   : +0.238
+  hand_contact_ratio            : +0.199
+
+Top 5 Features Pushing TOWARD Atelic:
+  max_velocity                  : -1.294
+  mean_velocity                 : -0.929
+  total_path_length             : -0.927
+  aperture_std                  : -0.234
+  min_acceleration              : -0.217
+
+================================================================================
+Sample atelic_22_text.pkl: True=atelic, Predicted=atelic
+Decision Value: -1.000 (positive→telic, negative→atelic)
+================================================================================
+
+Top 5 Features Pushing TOWARD Telic:
+  min_velocity                  : +0.715
+  total_path_length             : +0.683
+  hand_contact_binary           : +0.523
+  num_regions                   : +0.238
+  straightness                  : +0.180
+
+Top 5 Features Pushing TOWARD Atelic:
+  mean_velocity                 : -0.899
+  hand_contact_ratio            : -0.479
+  aperture_std                  : -0.426
+  min_body_distance             : -0.295
+  max_rotation                  : -0.275
+
+================================================================================
+Sample telic_14_fill_out_form.pkl: True=telic, Predicted=telic
+Decision Value: 1.000 (positive→telic, negative→atelic)
+================================================================================
+
+Top 5 Features Pushing TOWARD Telic:
+  mean_velocity                 : +1.646
+  displacement                  : +0.864
+  hand_contact_binary           : +0.523
+  min_acceleration              : +0.499
+  max_rotation                  : +0.369
+
+Top 5 Features Pushing TOWARD Atelic:
+  min_velocity                  : -1.800
+  straightness                  : -0.891
+  num_regions                   : -0.405
+  total_path_length             : -0.217
+  max_velocity                  : -0.105
+
+================================================================================
+Sample atelic_3.pkl: True=atelic, Predicted=atelic
+Decision Value: -1.437 (positive→telic, negative→atelic)
+================================================================================
+
+Top 5 Features Pushing TOWARD Telic:
+  min_hand_distance             : +0.517
+  min_velocity                  : +0.516
+  hand_contact_ratio            : +0.463
+  straightness                  : +0.316
+  num_regions                   : +0.238
+
+Top 5 Features Pushing TOWARD Atelic:
+  hand_contact_binary           : -1.414
+  aperture_std                  : -0.586
+  min_body_distance             : -0.491
+  aperture_range                : -0.302
+  max_velocity                  : -0.250
+
+================================================================================
+Sample atelic_25_walk.pkl: True=atelic, Predicted=atelic
+Decision Value: -1.000 (positive→telic, negative→atelic)
+================================================================================
+
+Top 5 Features Pushing TOWARD Telic:
+  displacement                  : +0.861
+  mean_velocity                 : +0.636
+  aperture_std                  : +0.624
+  hand_contact_ratio            : +0.463
+  num_regions                   : +0.238
+
+Top 5 Features Pushing TOWARD Atelic:
+  hand_contact_binary           : -1.414
+  total_path_length             : -1.184
+  straightness                  : -0.934
+  min_velocity                  : -0.781
+  setting_changed               : -0.167
+
+================================================================================
+Sample atelic_1.pkl: True=atelic, Predicted=atelic
+Decision Value: -1.384 (positive→telic, negative→atelic)
+================================================================================
+
+Top 5 Features Pushing TOWARD Telic:
+  max_velocity                  : +0.628
+  hand_contact_binary           : +0.523
+  straightness                  : +0.333
+  setting_changed               : +0.297
+  min_body_distance             : +0.137
+
+Top 5 Features Pushing TOWARD Atelic:
+  aperture_std                  : -0.595
+  velocity_std                  : -0.445
+  total_path_length             : -0.432
+  min_velocity                  : -0.418
+  num_regions                   : -0.405
+
+================================================================================
+Sample atelic_30_jump.pkl: True=atelic, Predicted=atelic
+Decision Value: -0.164 (positive→telic, negative→atelic)
+================================================================================
+
+Top 5 Features Pushing TOWARD Telic:
+  mean_velocity                 : +1.284
+  velocity_std                  : +1.077
+  straightness                  : +0.536
+  hand_contact_binary           : +0.523
+  min_body_distance             : +0.503
+
+Top 5 Features Pushing TOWARD Atelic:
+  total_path_length             : -1.926
+  max_velocity                  : -1.291
+  hand_contact_ratio            : -0.479
+  num_regions                   : -0.405
+  displacement                  : -0.143
+
+================================================================================
+Sample atelic_19_run.pkl: True=atelic, Predicted=atelic
+Decision Value: -1.138 (positive→telic, negative→atelic)
+================================================================================
+
+Top 5 Features Pushing TOWARD Telic:
+  hand_contact_binary           : +0.523
+  min_velocity                  : +0.413
+  straightness                  : +0.376
+  total_path_length             : +0.253
+  num_regions                   : +0.238
+
+Top 5 Features Pushing TOWARD Atelic:
+  mean_velocity                 : -0.655
+  hand_contact_ratio            : -0.479
+  max_velocity                  : -0.358
+  min_body_distance             : -0.332
+  displacement                  : -0.287
+
+================================================================================
+Sample telic_30_suggest.pkl: True=telic, Predicted=atelic
+Decision Value: -1.324 (positive→telic, negative→atelic)
+================================================================================
+
+Top 5 Features Pushing TOWARD Telic:
+  mean_velocity                 : +0.923
+  hand_contact_ratio            : +0.463
+  min_acceleration              : +0.393
+  straightness                  : +0.262
+  max_velocity                  : +0.253
+
+Top 5 Features Pushing TOWARD Atelic:
+  hand_contact_binary           : -1.414
+  min_velocity                  : -1.174
+  aperture_std                  : -0.561
+  aperture_range                : -0.299
+  min_body_distance             : -0.222
+
+================================================================================
+Sample telic_33_look_at_(paper).pkl: True=telic, Predicted=telic
+Decision Value: 1.615 (positive→telic, negative→atelic)
+================================================================================
+
+Top 5 Features Pushing TOWARD Telic:
+  total_path_length             : +0.914
+  max_velocity                  : +0.638
+  min_velocity                  : +0.537
+  hand_contact_binary           : +0.523
+  straightness                  : +0.446
+
+Top 5 Features Pushing TOWARD Atelic:
+  mean_velocity                 : -0.498
+  velocity_std                  : -0.402
+  min_body_distance             : -0.377
+  displacement                  : -0.309
+  hand_contact_ratio            : -0.202
+
+================================================================================
+Sample telic_20_postpone.pkl: True=telic, Predicted=telic
+Decision Value: 0.333 (positive→telic, negative→atelic)
+================================================================================
+
+Top 5 Features Pushing TOWARD Telic:
+  mean_velocity                 : +0.692
+  hand_contact_binary           : +0.523
+  velocity_std                  : +0.432
+  straightness                  : +0.388
+  num_regions                   : +0.238
+
+Top 5 Features Pushing TOWARD Atelic:
+  total_path_length             : -0.762
+  max_velocity                  : -0.348
+  hand_contact_ratio            : -0.296
+  aperture_std                  : -0.169
+  setting_changed               : -0.167
+
+================================================================================
+Sample telic_49_decide.pkl: True=telic, Predicted=telic
+Decision Value: 0.084 (positive→telic, negative→atelic)
+================================================================================
+
+Top 5 Features Pushing TOWARD Telic:
+  min_velocity                  : +0.790
+  max_velocity                  : +0.555
+  hand_contact_binary           : +0.523
+  setting_changed               : +0.297
+  min_body_distance             : +0.278
+
+Top 5 Features Pushing TOWARD Atelic:
+  mean_velocity                 : -0.903
+  velocity_std                  : -0.528
+  num_regions                   : -0.405
+  aperture_std                  : -0.310
+  straightness                  : -0.274
+
+================================================================================
+Sample telic_27_turn_around.pkl: True=telic, Predicted=telic
+Decision Value: 1.000 (positive→telic, negative→atelic)
+================================================================================
+
+Top 5 Features Pushing TOWARD Telic:
+  mean_velocity                 : +1.796
+  velocity_std                  : +0.768
+  displacement                  : +0.753
+  min_body_distance             : +0.537
+  hand_contact_ratio            : +0.463
+
+Top 5 Features Pushing TOWARD Atelic:
+  total_path_length             : -1.669
+  hand_contact_binary           : -1.414
+  max_velocity                  : -0.634
+  setting_changed               : -0.167
+  max_acceleration              : -0.129
+
+================================================================================
+Sample atelic_28_work.pkl: True=atelic, Predicted=telic
+Decision Value: 0.219 (positive→telic, negative→atelic)
+================================================================================
+
+Top 5 Features Pushing TOWARD Telic:
+  mean_velocity                 : +0.865
+  total_path_length             : +0.729
+  straightness                  : +0.571
+  min_acceleration              : +0.556
+  hand_contact_binary           : +0.523
+
+Top 5 Features Pushing TOWARD Atelic:
+  min_velocity                  : -1.060
+  aperture_std                  : -0.787
+  num_regions                   : -0.405
+  aperture_range                : -0.392
+  displacement                  : -0.346
+
+================================================================================
+Sample atelic_47_ride_in.pkl: True=atelic, Predicted=atelic
+Decision Value: -0.888 (positive→telic, negative→atelic)
+================================================================================
+
+Top 5 Features Pushing TOWARD Telic:
+  total_path_length             : +1.498
+  mean_velocity                 : +1.340
+  hand_contact_binary           : +0.523
+  min_acceleration              : +0.409
+  num_regions                   : +0.238
+
+Top 5 Features Pushing TOWARD Atelic:
+  min_velocity                  : -2.600
+  straightness                  : -0.703
+  hand_contact_ratio            : -0.479
+  aperture_std                  : -0.444
+  aperture_range                : -0.276
+
+================================================================================
+Sample atelic_31_dance.pkl: True=atelic, Predicted=atelic
+Decision Value: -0.103 (positive→telic, negative→atelic)
+================================================================================
+
+Top 5 Features Pushing TOWARD Telic:
+  min_velocity                  : +0.714
+  hand_contact_binary           : +0.523
+  max_velocity                  : +0.354
+  straightness                  : +0.318
+  setting_changed               : +0.297
+
+Top 5 Features Pushing TOWARD Atelic:
+  mean_velocity                 : -0.834
+  total_path_length             : -0.816
+  num_regions                   : -0.405
+  velocity_std                  : -0.334
+  min_acceleration              : -0.150
+
+================================================================================
+Sample atelic_38_have.pkl: True=atelic, Predicted=atelic
+Decision Value: -1.000 (positive→telic, negative→atelic)
+================================================================================
+
+Top 5 Features Pushing TOWARD Telic:
+  velocity_std                  : +0.655
+  total_path_length             : +0.523
+  hand_contact_ratio            : +0.463
+  mean_velocity                 : +0.368
+  num_regions                   : +0.238
+
+Top 5 Features Pushing TOWARD Atelic:
+  hand_contact_binary           : -1.414
+  aperture_std                  : -0.704
+  straightness                  : -0.376
+  aperture_range                : -0.361
+  max_rotation                  : -0.281
+
+================================================================================
+Sample telic_44_open_door.pkl: True=telic, Predicted=telic
+Decision Value: 0.802 (positive→telic, negative→atelic)
+================================================================================
+
+Top 5 Features Pushing TOWARD Telic:
+  total_path_length             : +0.600
+  hand_contact_binary           : +0.523
+  min_velocity                  : +0.519
+  max_velocity                  : +0.304
+  num_regions                   : +0.238
+
+Top 5 Features Pushing TOWARD Atelic:
+  mean_velocity                 : -0.490
+  max_rotation                  : -0.304
+  velocity_std                  : -0.200
+  min_acceleration              : -0.179
+  setting_changed               : -0.167
+
+================================================================================
+Sample atelic_37_investigate.pkl: True=atelic, Predicted=atelic
+Decision Value: -0.109 (positive→telic, negative→atelic)
+================================================================================
+
+Top 5 Features Pushing TOWARD Telic:
+  mean_velocity                 : +0.598
+  hand_contact_binary           : +0.523
+  num_regions                   : +0.238
+  max_velocity                  : +0.214
+  displacement                  : +0.153
+
+Top 5 Features Pushing TOWARD Atelic:
+  aperture_std                  : -0.609
+  hand_contact_ratio            : -0.291
+  aperture_range                : -0.285
+  min_velocity                  : -0.214
+  setting_changed               : -0.167
+
+================================================================================
+Sample telic_32_relax.pkl: True=telic, Predicted=telic
+Decision Value: 1.071 (positive→telic, negative→atelic)
+================================================================================
+
+Top 5 Features Pushing TOWARD Telic:
+  velocity_std                  : +0.528
+  hand_contact_binary           : +0.523
+  mean_velocity                 : +0.489
+  min_body_distance             : +0.478
+  total_path_length             : +0.420
+
+Top 5 Features Pushing TOWARD Atelic:
+  hand_contact_ratio            : -0.479
+  max_velocity                  : -0.479
+  aperture_std                  : -0.374
+  min_velocity                  : -0.228
+  max_acceleration              : -0.182
+
+================================================================================
+Sample telic_35_arrest.pkl: True=telic, Predicted=atelic
+Decision Value: -0.039 (positive→telic, negative→atelic)
+================================================================================
+
+Top 5 Features Pushing TOWARD Telic:
+  mean_velocity                 : +1.008
+  hand_contact_binary           : +0.523
+  min_acceleration              : +0.358
+  velocity_std                  : +0.314
+  num_regions                   : +0.238
+
+Top 5 Features Pushing TOWARD Atelic:
+  min_velocity                  : -0.928
+  min_body_distance             : -0.394
+  hand_contact_ratio            : -0.366
+  max_velocity                  : -0.321
+  setting_changed               : -0.167
+
+================================================================================
+Sample telic_34_become.pkl: True=telic, Predicted=telic
+Decision Value: 0.521 (positive→telic, negative→atelic)
+================================================================================
+
+Top 5 Features Pushing TOWARD Telic:
+  min_velocity                  : +0.871
+  total_path_length             : +0.840
+  max_velocity                  : +0.605
+  hand_contact_binary           : +0.523
+  num_regions                   : +0.238
+
+Top 5 Features Pushing TOWARD Atelic:
+  mean_velocity                 : -0.904
+  straightness                  : -0.601
+  velocity_std                  : -0.481
+  hand_contact_ratio            : -0.479
+  min_acceleration              : -0.207
+
+================================================================================
+Sample telic_46_appear.pkl: True=telic, Predicted=telic
+Decision Value: 2.570 (positive→telic, negative→atelic)
+================================================================================
+
+Top 5 Features Pushing TOWARD Telic:
+  aperture_std                  : +1.718
+  aperture_range                : +0.741
+  velocity_std                  : +0.705
+  min_velocity                  : +0.686
+  hand_contact_binary           : +0.523
+
+Top 5 Features Pushing TOWARD Atelic:
+  max_velocity                  : -1.067
+  min_body_distance             : -0.458
+  hand_contact_ratio            : -0.222
+  min_acceleration              : -0.168
+  setting_changed               : -0.167
+
+================================================================================
+Sample telic_10.pkl: True=telic, Predicted=atelic
+Decision Value: -0.822 (positive→telic, negative→atelic)
+================================================================================
+
+Top 5 Features Pushing TOWARD Telic:
+  max_velocity                  : +0.533
+  hand_contact_ratio            : +0.463
+  min_body_distance             : +0.401
+  straightness                  : +0.358
+  setting_changed               : +0.297
+
+Top 5 Features Pushing TOWARD Atelic:
+  hand_contact_binary           : -1.414
+  num_regions                   : -0.405
+  velocity_std                  : -0.213
+  max_rotation                  : -0.177
+  total_path_length             : -0.170
+
+================================================================================
+Sample telic_13_come_on.pkl: True=telic, Predicted=atelic
+Decision Value: -1.078 (positive→telic, negative→atelic)
+================================================================================
+
+Top 5 Features Pushing TOWARD Telic:
+  velocity_std                  : +0.917
+  displacement                  : +0.813
+  mean_velocity                 : +0.798
+  min_body_distance             : +0.531
+  hand_contact_binary           : +0.523
+
+Top 5 Features Pushing TOWARD Atelic:
+  max_velocity                  : -1.853
+  total_path_length             : -1.684
+  min_velocity                  : -0.841
+  hand_contact_ratio            : -0.479
+  straightness                  : -0.383
+
+================================================================================
+Sample atelic_39_draw.pkl: True=atelic, Predicted=atelic
+Decision Value: -1.273 (positive→telic, negative→atelic)
+================================================================================
+
+Top 5 Features Pushing TOWARD Telic:
+  max_velocity                  : +0.680
+  min_velocity                  : +0.568
+  hand_contact_binary           : +0.523
+  straightness                  : +0.344
+  num_regions                   : +0.238
+
+Top 5 Features Pushing TOWARD Atelic:
+  mean_velocity                 : -1.021
+  velocity_std                  : -0.644
+  total_path_length             : -0.541
+  aperture_std                  : -0.477
+  max_rotation                  : -0.232
+
+================================================================================
+Sample atelic_16_look.pkl: True=atelic, Predicted=atelic
+Decision Value: -0.465 (positive→telic, negative→atelic)
+================================================================================
+
+Top 5 Features Pushing TOWARD Telic:
+  hand_contact_binary           : +0.523
+  setting_changed               : +0.297
+  hand_contact_ratio            : +0.296
+  displacement                  : +0.255
+  min_body_distance             : +0.241
+
+Top 5 Features Pushing TOWARD Atelic:
+  aperture_std                  : -0.422
+  total_path_length             : -0.406
+  num_regions                   : -0.405
+  straightness                  : -0.278
+  aperture_range                : -0.160
+
+================================================================================
+Sample telic_50_throw.pkl: True=telic, Predicted=telic
+Decision Value: 1.000 (positive→telic, negative→atelic)
+================================================================================
+
+Top 5 Features Pushing TOWARD Telic:
+  aperture_std                  : +1.608
+  min_hand_distance             : +0.517
+  hand_contact_ratio            : +0.463
+  total_path_length             : +0.397
+  aperture_range                : +0.375
+
+Top 5 Features Pushing TOWARD Atelic:
+  hand_contact_binary           : -1.414
+  min_velocity                  : -0.452
+  aperture_change               : -0.263
+  displacement                  : -0.240
+  max_rotation                  : -0.169
+
+================================================================================
+Sample atelic_21_hold_in.pkl: True=atelic, Predicted=atelic
+Decision Value: -1.000 (positive→telic, negative→atelic)
+================================================================================
+
+Top 5 Features Pushing TOWARD Telic:
+  total_path_length             : +1.095
+  min_velocity                  : +0.894
+  max_velocity                  : +0.593
+  min_hand_distance             : +0.517
+  hand_contact_ratio            : +0.463
+
+Top 5 Features Pushing TOWARD Atelic:
+  hand_contact_binary           : -1.414
+  mean_velocity                 : -1.206
+  aperture_std                  : -0.867
+  velocity_std                  : -0.502
+  aperture_range                : -0.435
+
+================================================================================
+Sample telic_29_shut_down.pkl: True=telic, Predicted=telic
+Decision Value: 6.483 (positive→telic, negative→atelic)
+================================================================================
+
+Top 5 Features Pushing TOWARD Telic:
+  aperture_std                  : +3.959
+  aperture_range                : +0.984
+  total_path_length             : +0.849
+  max_rotation                  : +0.717
+  hand_contact_binary           : +0.523
+
+Top 5 Features Pushing TOWARD Atelic:
+  aperture_change               : -0.563
+  max_velocity                  : -0.357
+  min_body_distance             : -0.237
+  orientation_change            : -0.184
+  setting_changed               : -0.167
+
+================================================================================
+Sample telic_21_read_through.pkl: True=telic, Predicted=telic
+Decision Value: 0.478 (positive→telic, negative→atelic)
+================================================================================
+
+Top 5 Features Pushing TOWARD Telic:
+  aperture_std                  : +0.631
+  hand_contact_binary           : +0.523
+  aperture_range                : +0.329
+  setting_changed               : +0.297
+  max_rotation                  : +0.185
+
+Top 5 Features Pushing TOWARD Atelic:
+  total_path_length             : -0.454
+  hand_contact_ratio            : -0.442
+  num_regions                   : -0.405
+  min_body_distance             : -0.226
+  mean_velocity                 : -0.161
+
+================================================================================
+Sample telic_36_disappear.pkl: True=telic, Predicted=telic
+Decision Value: 1.478 (positive→telic, negative→atelic)
+================================================================================
+
+Top 5 Features Pushing TOWARD Telic:
+  velocity_std                  : +1.417
+  total_path_length             : +1.018
+  mean_velocity                 : +1.011
+  hand_contact_binary           : +0.523
+  min_acceleration              : +0.443
+
+Top 5 Features Pushing TOWARD Atelic:
+  min_velocity                  : -1.740
+  max_velocity                  : -1.098
+  num_regions                   : -0.405
+  straightness                  : -0.272
+  max_rotation                  : -0.248
+
+================================================================================
+Sample atelic_23_scratch.pkl: True=atelic, Predicted=telic
+Decision Value: 0.120 (positive→telic, negative→atelic)
+================================================================================
+
+Top 5 Features Pushing TOWARD Telic:
+  total_path_length             : +0.615
+  straightness                  : +0.544
+  hand_contact_binary           : +0.523
+  min_velocity                  : +0.399
+  max_velocity                  : +0.367
+
+Top 5 Features Pushing TOWARD Atelic:
+  aperture_std                  : -0.479
+  mean_velocity                 : -0.398
+  displacement                  : -0.342
+  velocity_std                  : -0.322
+  min_body_distance             : -0.265
+
+================================================================================
+Sample atelic_8.pkl: True=atelic, Predicted=atelic
+Decision Value: -1.000 (positive→telic, negative→atelic)
+================================================================================
+
+Top 5 Features Pushing TOWARD Telic:
+  mean_velocity                 : +1.694
+  velocity_std                  : +0.828
+  min_hand_distance             : +0.517
+  hand_contact_ratio            : +0.463
+  setting_changed               : +0.297
+
+Top 5 Features Pushing TOWARD Atelic:
+  hand_contact_binary           : -1.414
+  min_velocity                  : -1.220
+  max_velocity                  : -0.736
+  aperture_std                  : -0.526
+  num_regions                   : -0.405
+
+================================================================================
+Sample telic_15_give_up.pkl: True=telic, Predicted=telic
+Decision Value: 2.254 (positive→telic, negative→atelic)
+================================================================================
+
+Top 5 Features Pushing TOWARD Telic:
+  mean_velocity                 : +1.538
+  max_rotation                  : +0.996
+  hand_contact_binary           : +0.523
+  displacement                  : +0.493
+  velocity_std                  : +0.458
+
+Top 5 Features Pushing TOWARD Atelic:
+  min_velocity                  : -1.817
+  straightness                  : -0.560
+  orientation_change            : -0.191
+  setting_changed               : -0.167
+  min_hand_distance             : -0.098
+
+================================================================================
+Sample telic_11_arrive.pkl: True=telic, Predicted=telic
+Decision Value: 0.934 (positive→telic, negative→atelic)
+================================================================================
+
+Top 5 Features Pushing TOWARD Telic:
+  mean_velocity                 : +0.903
+  straightness                  : +0.621
+  hand_contact_binary           : +0.523
+  velocity_std                  : +0.308
+  num_regions                   : +0.238
+
+Top 5 Features Pushing TOWARD Atelic:
+  total_path_length             : -0.664
+  aperture_std                  : -0.363
+  displacement                  : -0.352
+  setting_changed               : -0.167
+  aperture_range                : -0.107
+
+================================================================================
+Sample atelic_9.pkl: True=atelic, Predicted=atelic
+Decision Value: -1.000 (positive→telic, negative→atelic)
+================================================================================
+
+Top 5 Features Pushing TOWARD Telic:
+  hand_contact_binary           : +0.523
+  mean_velocity                 : +0.467
+  max_velocity                  : +0.443
+  max_rotation                  : +0.432
+  aperture_std                  : +0.407
+
+Top 5 Features Pushing TOWARD Atelic:
+  total_path_length             : -3.304
+  num_regions                   : -0.405
+  aperture_change               : -0.267
+  velocity_std                  : -0.241
+  min_velocity                  : -0.146
+
+================================================================================
+Sample telic_23_start.pkl: True=telic, Predicted=atelic
+Decision Value: -0.348 (positive→telic, negative→atelic)
+================================================================================
+
+Top 5 Features Pushing TOWARD Telic:
+  max_velocity                  : +0.915
+  total_path_length             : +0.843
+  min_velocity                  : +0.770
+  hand_contact_binary           : +0.523
+  straightness                  : +0.480
+
+Top 5 Features Pushing TOWARD Atelic:
+  mean_velocity                 : -1.092
+  velocity_std                  : -0.687
+  aperture_std                  : -0.588
+  hand_contact_ratio            : -0.479
+  displacement                  : -0.305
+
+================================================================================
+Sample atelic_12.pkl: True=atelic, Predicted=atelic
+Decision Value: -1.331 (positive→telic, negative→atelic)
+================================================================================
+
+Top 5 Features Pushing TOWARD Telic:
+  displacement                  : +0.708
+  mean_velocity                 : +0.700
+  min_hand_distance             : +0.517
+  hand_contact_ratio            : +0.463
+  min_body_distance             : +0.459
+
+Top 5 Features Pushing TOWARD Atelic:
+  total_path_length             : -1.951
+  hand_contact_binary           : -1.414
+  straightness                  : -0.636
+  num_regions                   : -0.405
+  min_velocity                  : -0.389
+
+================================================================================
+Sample telic_17_happen.pkl: True=telic, Predicted=telic
+Decision Value: 1.000 (positive→telic, negative→atelic)
+================================================================================
+
+Top 5 Features Pushing TOWARD Telic:
+  min_velocity                  : +0.643
+  hand_contact_binary           : +0.523
+  total_path_length             : +0.480
+  hand_contact_ratio            : +0.440
+  max_velocity                  : +0.343
+
+Top 5 Features Pushing TOWARD Atelic:
+  mean_velocity                 : -0.843
+  velocity_std                  : -0.496
+  min_body_distance             : -0.217
+  setting_changed               : -0.167
+  min_acceleration              : -0.163
+
+================================================================================
+Sample atelic_35_ponder.pkl: True=atelic, Predicted=telic
+Decision Value: 0.721 (positive→telic, negative→atelic)
+================================================================================
+
+Top 5 Features Pushing TOWARD Telic:
+  max_velocity                  : +0.525
+  hand_contact_binary           : +0.523
+  min_body_distance             : +0.453
+  setting_changed               : +0.297
+  displacement                  : +0.249
+
+Top 5 Features Pushing TOWARD Atelic:
+  num_regions                   : -0.405
+  velocity_std                  : -0.324
+  min_velocity                  : -0.303
+  max_rotation                  : -0.279
+  straightness                  : -0.136
+
+================================================================================
+Sample telic_9.pkl: True=telic, Predicted=atelic
+Decision Value: -0.003 (positive→telic, negative→atelic)
+================================================================================
+
+Top 5 Features Pushing TOWARD Telic:
+  hand_contact_binary           : +0.523
+  max_velocity                  : +0.455
+  total_path_length             : +0.341
+  num_regions                   : +0.238
+  aperture_range                : +0.172
+
+Top 5 Features Pushing TOWARD Atelic:
+  mean_velocity                 : -0.492
+  velocity_std                  : -0.467
+  max_rotation                  : -0.285
+  min_body_distance             : -0.232
+  displacement                  : -0.206
+
+================================================================================
+Sample telic_22_send.pkl: True=telic, Predicted=telic
+Decision Value: 1.227 (positive→telic, negative→atelic)
+================================================================================
+
+Top 5 Features Pushing TOWARD Telic:
+  total_path_length             : +0.974
+  velocity_std                  : +0.678
+  hand_contact_binary           : +0.523
+  max_rotation                  : +0.293
+  mean_velocity                 : +0.242
+
+Top 5 Features Pushing TOWARD Atelic:
+  straightness                  : -0.969
+  max_velocity                  : -0.761
+  setting_changed               : -0.167
+  min_acceleration              : -0.115
+  min_hand_distance             : -0.098
+
+================================================================================
+Sample atelic_11.pkl: True=atelic, Predicted=atelic
+Decision Value: -1.000 (positive→telic, negative→atelic)
+================================================================================
+
+Top 5 Features Pushing TOWARD Telic:
+  max_velocity                  : +0.671
+  hand_contact_binary           : +0.523
+  min_body_distance             : +0.430
+  setting_changed               : +0.297
+  straightness                  : +0.274
+
+Top 5 Features Pushing TOWARD Atelic:
+  aperture_std                  : -0.633
+  velocity_std                  : -0.625
+  hand_contact_ratio            : -0.418
+  num_regions                   : -0.405
+  mean_velocity                 : -0.377
+
+================================================================================
+Sample atelic_18_read.pkl: True=atelic, Predicted=telic
+Decision Value: 0.595 (positive→telic, negative→atelic)
+================================================================================
+
+Top 5 Features Pushing TOWARD Telic:
+  max_rotation                  : +0.744
+  hand_contact_binary           : +0.523
+  min_velocity                  : +0.298
+  total_path_length             : +0.240
+  num_regions                   : +0.238
+
+Top 5 Features Pushing TOWARD Atelic:
+  hand_contact_ratio            : -0.479
+  mean_velocity                 : -0.334
+  aperture_std                  : -0.293
+  orientation_change            : -0.286
+  straightness                  : -0.231
+
+================================================================================
+Sample telic_47_plug.pkl: True=telic, Predicted=telic
+Decision Value: 1.000 (positive→telic, negative→atelic)
+================================================================================
+
+Top 5 Features Pushing TOWARD Telic:
+  total_path_length             : +0.818
+  hand_contact_binary           : +0.523
+  velocity_std                  : +0.404
+  straightness                  : +0.275
+  num_regions                   : +0.238
+
+Top 5 Features Pushing TOWARD Atelic:
+  hand_contact_ratio            : -0.407
+  aperture_std                  : -0.315
+  aperture_range                : -0.206
+  displacement                  : -0.204
+  setting_changed               : -0.167
+
+================================================================================
+Sample atelic_46_collect.pkl: True=atelic, Predicted=telic
+Decision Value: 0.342 (positive→telic, negative→atelic)
+================================================================================
+
+Top 5 Features Pushing TOWARD Telic:
+  aperture_std                  : +0.953
+  min_velocity                  : +0.833
+  hand_contact_binary           : +0.523
+  velocity_std                  : +0.453
+  total_path_length             : +0.397
+
+Top 5 Features Pushing TOWARD Atelic:
+  max_velocity                  : -1.207
+  mean_velocity                 : -0.877
+  hand_contact_ratio            : -0.479
+  max_rotation                  : -0.276
+  displacement                  : -0.231
+
+================================================================================
+Sample atelic_10.pkl: True=atelic, Predicted=atelic
+Decision Value: -0.393 (positive→telic, negative→atelic)
+================================================================================
+
+Top 5 Features Pushing TOWARD Telic:
+  hand_contact_binary           : +0.523
+  aperture_range                : +0.404
+  max_velocity                  : +0.399
+  straightness                  : +0.264
+  num_regions                   : +0.238
+
+Top 5 Features Pushing TOWARD Atelic:
+  total_path_length             : -2.188
+  hand_contact_ratio            : -0.327
+  velocity_std                  : -0.260
+  setting_changed               : -0.167
+  min_hand_distance             : -0.103
+
+================================================================================
+Sample atelic_36_swim.pkl: True=atelic, Predicted=atelic
+Decision Value: -1.757 (positive→telic, negative→atelic)
+================================================================================
+
+Top 5 Features Pushing TOWARD Telic:
+  mean_velocity                 : +2.176
+  min_acceleration              : +0.833
+  aperture_std                  : +0.728
+  max_rotation                  : +0.698
+  hand_contact_binary           : +0.523
+
+Top 5 Features Pushing TOWARD Atelic:
+  total_path_length             : -3.848
+  min_velocity                  : -3.246
+  max_velocity                  : -0.346
+  orientation_change            : -0.254
+  setting_changed               : -0.167
+
+================================================================================
+Sample telic_8.pkl: True=telic, Predicted=atelic
+Decision Value: -1.378 (positive→telic, negative→atelic)
+================================================================================
+
+Top 5 Features Pushing TOWARD Telic:
+  min_velocity                  : +0.664
+  hand_contact_binary           : +0.523
+  setting_changed               : +0.297
+  min_body_distance             : +0.230
+  straightness                  : +0.203
+
+Top 5 Features Pushing TOWARD Atelic:
+  total_path_length             : -1.185
+  mean_velocity                 : -0.935
+  velocity_std                  : -0.426
+  num_regions                   : -0.405
+  hand_contact_ratio            : -0.359
+
+================================================================================
+Sample atelic_26_drive.pkl: True=atelic, Predicted=atelic
+Decision Value: -2.863 (positive→telic, negative→atelic)
+================================================================================
+
+Top 5 Features Pushing TOWARD Telic:
+  min_velocity                  : +0.753
+  straightness                  : +0.584
+  hand_contact_ratio            : +0.463
+  max_velocity                  : +0.305
+  setting_changed               : +0.297
+
+Top 5 Features Pushing TOWARD Atelic:
+  hand_contact_binary           : -1.414
+  mean_velocity                 : -1.163
+  velocity_std                  : -0.639
+  aperture_std                  : -0.621
+  num_regions                   : -0.405
+
+================================================================================
+Sample telic_24_explode.pkl: True=telic, Predicted=telic
+Decision Value: 2.364 (positive→telic, negative→atelic)
+================================================================================
+
+Top 5 Features Pushing TOWARD Telic:
+  aperture_std                  : +1.556
+  min_velocity                  : +0.694
+  max_velocity                  : +0.683
+  total_path_length             : +0.641
+  hand_contact_binary           : +0.523
+
+Top 5 Features Pushing TOWARD Atelic:
+  mean_velocity                 : -0.950
+  velocity_std                  : -0.514
+  aperture_change               : -0.260
+  min_acceleration              : -0.192
+  setting_changed               : -0.167
+
+================================================================================
+Sample telic_25_enter.pkl: True=telic, Predicted=atelic
+Decision Value: -0.525 (positive→telic, negative→atelic)
+================================================================================
+
+Top 5 Features Pushing TOWARD Telic:
+  total_path_length             : +0.899
+  max_velocity                  : +0.683
+  min_velocity                  : +0.660
+  hand_contact_binary           : +0.523
+  setting_changed               : +0.297
+
+Top 5 Features Pushing TOWARD Atelic:
+  mean_velocity                 : -1.086
+  velocity_std                  : -0.588
+  num_regions                   : -0.405
+  straightness                  : -0.375
+  hand_contact_ratio            : -0.306
