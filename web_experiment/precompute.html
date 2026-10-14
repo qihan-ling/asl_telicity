@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Build Reference Landmarks</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<main>
+  <h1>Reference landmarks</h1>
+  <p class="muted">Runs the same MediaPipe tracker as the experiment over every frame of each stimulus video
+    and saves <code>references.json</code>. Put the downloaded file in <code>web_experiment/data/</code>.
+    Re-run whenever stimuli or MediaPipe settings in <code>js/config.js</code> change.</p>
+  <div class="row"><button class="btn primary" id="go">Build references</button><button class="btn" id="dl" disabled>Download references.json</button></div>
+  <div class="media" style="aspect-ratio:16/9"><canvas id="cv"></canvas></div>
+  <p class="status" id="st"></p>
+  <div class="log" id="log"></div>
+</main>
+<script type="module">
+  import { CONFIG, applyUrlOverrides } from './js/config.js';
+  import { ITEMS } from './js/stimuli.js';
+  import { createTracker } from './js/tracker.js';
+  import { computeReference, detectionStats } from './js/references.js';
+  const cfg = applyUrlOverrides(CONFIG);
+  const $ = (id) => document.getElementById(id);
+  let out = null;
+  $('go').onclick = async () => {
+    $('go').disabled = true;
+    try {
+      $('st').textContent = 'Loading tracker…';
+      const tracker = await createTracker(cfg.mediapipe, { mock: cfg.mock });
+      out = { schema: 'sign-imitation-references/v1', createdAt: new Date().toISOString(), tracker: tracker.info,
+              userAgent: navigator.userAgent, mediapipeConfig: cfg.mediapipe, items: {} };
+      $('log').textContent = 'item       frames  pose  L-hand  R-hand\n';
+      for (const it of ITEMS) {
+        const ref = await computeReference(tracker, cfg.stimuliBase + it.file, {
+          canvas: $('cv'), onProgress: (i, n) => ($('st').textContent = `${it.id}: frame ${i}/${n}`) });
+        out.items[it.id] = ref;
+        const s = detectionStats(ref), p = (x) => (100 * x).toFixed(0).padStart(4) + '%';
+        $('log').textContent += `${it.id.padEnd(10)} ${String(ref.frames.length).padStart(6)} ${p(s.pose)} ${p(s.left_hand)}  ${p(s.right_hand)}\n`;
+      }
+      $('st').textContent = 'Done. Download the file and save it as web_experiment/data/references.json.';
+      $('dl').disabled = false;
+    } catch (e) { console.error(e); $('st').textContent = 'Error: ' + (e.message || e); $('go').disabled = false; }
+  };
+  $('dl').onclick = () => {
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob([JSON.stringify(out)], { type: 'application/json' }));
+    a.download = 'references.json'; document.body.appendChild(a); a.click(); a.remove();
+  };
+</script>
+</body>
+</html>
