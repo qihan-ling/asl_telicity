@@ -2,7 +2,8 @@
 
 Participants watch a sign video and then copy it in front of their camera. MediaPipe (Tasks Vision
 PoseLandmarker + HandLandmarker) tracks the body and both hands in the browser. **Only landmarks are
-stored; no video is recorded.** At the end, each item gets a similarity score (0–100) against the
+stored.** A short clip is kept temporarily in page memory so participants can review each attempt, and it is discarded on
+Start over or Submit. At the end, each item gets a similarity score (0–100) against the
 model signer, and the movements can be replayed as skeletons (reference vs. participant). The layout
 works in laptop and iPad browsers (Chrome, Safari, Edge; portrait or landscape).
 
@@ -28,9 +29,15 @@ Download `references.json` and save it as `data/references.json`. Rebuild it whe
 or the MediaPipe settings change. If the file is missing, the experiment computes the references
 while it loads (this works, but it is slower).
 
+### Demo version
+Send people **`demo.html`**, which opens `index.html?demo=1`. The demo has 3 signs (*buy*, *die*, *talk*,
+covering both telic and atelic; set them in `CONFIG.demo.items`), no participant-ID prompt, and the results shown
+at the end, with the data download optional. Everything else works the same as the full experiment.
+
 ### URL options
 | | |
 |---|---|
+| `?demo=1` | demo version (same as opening `demo.html`) |
 | `?pid=P01` | participant ID (otherwise the start screen asks for it) |
 | `?list=1` … `?list=4` | Wagner Exp. 1A counterbalancing order (default: random) |
 | `?n=6` | only the first *n* items |
@@ -42,18 +49,37 @@ Everything else is in `js/config.js`: item order, stimulus policy, countdown, ma
 duration, MediaPipe model size (`lite` is faster on older iPads), similarity settings, and whether
 participants see their results.
 
+## Camera check
+A centered box is drawn over the camera preview. **Continue** unlocks only when both shoulders are inside the
+box at a reasonable distance (shoulder width 15–50% of the image) and both raised hands are inside it, held
+for 1 s. The thresholds are in `CONFIG.framing`. Before each recording the same box and hints are shown again
+as advice only. Face landmarks are tracked and saved but never drawn on screen.
+
 ## Trial flow
 1. **Watch** (`js/stimulusPlayer.js`): a standalone module that knows nothing about the camera or
    the experiment. Policy `replay` (one automatic play, then optional replays) or `fixed`
    (*k* automatic plays, which gives every participant equal exposure). Every play is logged.
 2. **Sign** (`js/recorder.js`): a live mirrored preview with the skeleton overlay, then **Start recording**,
-   a 3-2-1 countdown, recording, and **Stop** (or auto-stop at `maxDurationSec`). The captured skeleton
-   is replayed, followed by **Start over** or **Confirm & submit**. Discarded attempts are counted;
+   a 3-2-1 countdown, recording, and **Stop** (or auto-stop at `maxDurationSec`). The screen then shows
+   their own clip, replayed mirrored and on a loop (in memory only, never saved or sent, and discarded on the next button
+   press; `recording.reviewVideo: false` turns this off), followed by **Start over** or **Confirm & submit**.
+   Browsers without MediaRecorder show "Recorded x s" instead.
+   The skeleton is hidden during trials unless `recording.showSkeleton: true`. Discarded attempts are counted;
    their landmarks are kept only if `saveDiscardedAttempts: true`.
 3. *(Optional)* post-trial question: set `postTrialQuestion` in the config (off by default).
 
 The data is backed up to the browser's IndexedDB after every trial. If the page is reloaded by
 accident, the start screen offers to download the unfinished session.
+
+## Results page
+The scores are grouped into Set 1 (telic) and Set 2 (atelic) without naming them. **Want to know more?** opens
+a page explaining the distinction. The participant-facing text is at the top of `js/results.js`.
+
+## Hosting on GitHub Pages
+In the repo, go to Settings → Pages → *Deploy from a branch* → `main` / `(root)` → Save. After about a minute the
+experiment is at `https://<user>.github.io/<repo>/web_experiment/`, and the demo at `…/web_experiment/demo.html`.
+Pages uses HTTPS, so the camera works on iPads and phones. An empty `.nojekyll` file at the repo root
+stops GitHub from running Jekyll on the folder.
 
 ## Data file (`<study>_<pid>_<time>.json`)
 One file per session, with the session info, device, camera resolution, tracker and model versions,
@@ -78,8 +104,10 @@ arrays), so your existing scripts can read participant productions directly.
    Shoulders are used instead of the torso because the NGT videos are cropped above the hips.
 2. Per-frame features: both wrist positions, both elbows, and each hand's shape (20 finger joints relative
    to the wrist, scaled by hand size).
-3. Trim to the active window, i.e. the frames where a wrist is raised above the rest position, then
-   resample to 25 Hz.
+3. Trim the idle start and end. By default (`trim: 'hands'`) only the frames from the first to the last frame with
+   a tracked hand are kept (plus 3 frames of padding), for both the model and the participant. If no hand is ever
+   tracked, it falls back to the "wrist raised" rule. Other modes: `'hands+height'`, `'height'`, `'none'`.
+   Then resample to 25 Hz.
 4. Run DTW (so speed differences don't count). The per-frame cost is a weighted wrist + elbow + hand-shape
    distance, with a penalty when one side sees a hand and the other doesn't.
 5. Run it both **directly** and **mirrored** (left and right swapped, as when a participant mirrors the

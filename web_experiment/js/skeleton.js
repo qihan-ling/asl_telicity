@@ -5,7 +5,7 @@ export const HAND_EDGES = [
   [0, 1], [1, 2], [2, 3], [3, 4], [0, 5], [5, 6], [6, 7], [7, 8], [5, 9], [9, 10], [10, 11], [11, 12],
   [9, 13], [13, 14], [14, 15], [15, 16], [13, 17], [0, 17], [17, 18], [18, 19], [19, 20],
 ];
-const FACE = [0, 2, 5, 7, 8, 9, 10];
+// Face landmarks (pose 0-10) are tracked and saved but deliberately never drawn.
 
 function css(name, fallback) {
   try { return getComputedStyle(document.documentElement).getPropertyValue(name).trim() || fallback; } catch { return fallback; }
@@ -28,7 +28,6 @@ export function drawFrame(ctx, frame, map, color, { lw = 3, alpha = 1, hipLimit 
       if (hipLimit && (a >= 23 || b >= 23) && P[a].length > 3 && P[a][3] != null && P[a][3] < 0.3) continue;
       line(P[a], P[b]);
     }
-    for (const i of FACE) dot(P[i], lw * 0.8);
     // wrists from pose are drawn only if no hand is detected
     if (!frame.left_hand) dot(P[15], lw * 1.3);
     if (!frame.right_hand) dot(P[16], lw * 1.3);

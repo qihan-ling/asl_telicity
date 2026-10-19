@@ -18,7 +18,10 @@ export const POSE = { NOSE: 0, L_SH: 11, R_SH: 12, L_EL: 13, R_EL: 14, L_WR: 15,
 
 export const DEFAULT_SIM = {
   resampleHz: 25,
-  activeYThreshold: 1.6,   // wrist above (shoulder line + 1.6 shoulder widths) = signing
+  trim: 'hands',           // 'hands': keep first..last frame with a tracked hand (fallback: 'height')
+                           // 'hands+height': a tracked hand AND a wrist raised above activeYThreshold
+                           // 'height': wrist raised above activeYThreshold;  'none': keep everything
+  activeYThreshold: 1.6,   // wrist above (shoulder line + 1.6 shoulder widths) = raised
   activePadFrames: 3,
   weights: { wrist: 1.0, elbow: 0.5, hand: 0.6 },
   handMissingPenalty: 0.6, // handshape cost when one sequence sees the hand and the other doesn't
@@ -115,6 +118,27 @@ export function trimActive(feats, thr = DEFAULT_SIM.activeYThreshold, pad = DEFA
   return { feats: feats.slice(s, e + 1), trimmed: true, start: s, end: e };
 }
 
+/** Keep the first..last frame that passes `isActive` (+ padding); unchanged if none pass. */
+function trimBy(feats, isActive, pad) {
+  let first = -1, last = -1;
+  feats.forEach((f, i) => { if (isActive(f)) { if (first < 0) first = i; last = i; } });
+  if (first < 0) return null;
+  const s = Math.max(0, first - pad), e = Math.min(feats.length - 1, last + pad);
+  return { feats: feats.slice(s, e + 1), trimmed: true, start: s, end: e };
+}
+
+/** Trim the idle start/end of a sequence according to o.trim (see DEFAULT_SIM). */
+export function trimSequence(feats, o = DEFAULT_SIM) {
+  const pad = o.activePadFrames, thr = o.activeYThreshold;
+  const hand = (f) => !!(f.hL || f.hR);
+  const raised = (f) => Math.min(f.wL[1], f.wR[1]) < thr;
+  const none = { feats, trimmed: false, start: 0, end: feats.length - 1 };
+  if (o.trim === 'none') return none;
+  if (o.trim === 'height') return trimActive(feats, thr, pad);
+  if (o.trim === 'hands+height') return trimBy(feats, (f) => hand(f) && raised(f), pad) || trimActive(feats, thr, pad);
+  return trimBy(feats, hand, pad) || trimActive(feats, thr, pad); // 'hands' (default)
+}
+
 /** Nearest-frame resampling on the timestamp axis. */
 export function resample(feats, hz = 25) {
   if (feats.length < 2) return feats;
@@ -192,7 +216,7 @@ export function prepare(frames, aspect, o = DEFAULT_SIM) {
   const norm = normalizeSequence(frames, aspect);
   if (!norm) return null;
   const all = extractFeatures(norm.frames);
-  const tr = trimActive(all, o.activeYThreshold, o.activePadFrames);
+  const tr = trimSequence(all, o);
   return { norm, feats: resample(tr.feats, o.resampleHz), trim: tr };
 }
 

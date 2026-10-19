@@ -34,6 +34,7 @@ function shuffle(a) {
 export function orderItems(order, n) {
   let items;
   if (order === 'random') items = shuffle(ITEMS);
+  else if (order.startsWith('ids:')) items = order.slice(4).split(',').map((id) => ITEMS.find((it) => it.id === id)).filter(Boolean);
   else if (LISTS[order]) items = LISTS[order].map((id) => ITEMS.find((it) => it.id === id));
   else items = [...ITEMS];
   return n ? items.slice(0, n) : items;

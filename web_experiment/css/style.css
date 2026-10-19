@@ -45,11 +45,12 @@ table.results th, table.results td { text-align: left; padding: 6px 6px; border-
 .bar { display: inline-block; width: 90px; height: 8px; background: var(--line); border-radius: 4px; margin-right: 8px; vertical-align: middle; }
 .bar span { display: block; height: 100%; background: var(--fg); border-radius: 4px; }
 .num { font-variant-numeric: tabular-nums; }
-.compare { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 8px 0; }
+.compare { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin: 8px 0; }
 .compare figure { margin: 0; } .compare figcaption { font-size: 0.85rem; color: var(--muted); margin-bottom: 4px; }
 .compare .media { aspect-ratio: 16 / 9; max-width: none; }
 .compare .media.sk { background: #fafafa; border: 1px solid var(--line); }
-.legend { margin-top: 8px; }
+.legend { margin: 8px 0 4px; }
+.key { display: inline-block; width: 12px; height: 12px; border-radius: 3px; vertical-align: -1px; margin-right: 2px; }
 
 /* precompute page */
 .log { font: 13px/1.4 ui-monospace, Menlo, monospace; white-space: pre-wrap; background: #f6f6f6; padding: 10px; border-radius: 6px; }
@@ -64,3 +65,20 @@ table.results th, table.results td { text-align: left; padding: 6px 6px; border-
   :root:not([data-theme="light"]) .compare .media.sk { background: #1b1b1b; }
   :root:not([data-theme="light"]) .log { background: #1e1e1e; }
 }
+
+/* camera check list */
+.checks { list-style: none; padding: 0; margin: 10px auto 0; max-width: 420px; font-size: 0.95rem; color: var(--muted); }
+.checks li { padding: 2px 0; }
+.checks li.ok { color: var(--fg); }
+
+/* after a recording */
+.done-wrap { background: #000; display: flex; align-items: center; justify-content: center; }
+.done-wrap .done-msg { color: #fff; }
+.done-msg { display: flex; flex-direction: column; gap: 6px; text-align: center; padding: 16px; color: var(--fg); }
+
+/* privacy note, result sets */
+.note { border: 1px solid var(--line); border-radius: 8px; padding: 10px 14px; margin: 16px 0; }
+.note p { margin: 6px 0 0; font-size: 0.95rem; }
+.set { margin: 18px 0; }
+.set h3 { font-size: 1.05rem; margin: 0 0 6px; }
+.res-more p { max-width: 70ch; }
