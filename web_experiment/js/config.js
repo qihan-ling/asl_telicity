@@ -80,6 +80,7 @@ export function applyUrlOverrides(cfg) {
   if (q.get('plays')) c.stimulusPlayer = { ...c.stimulusPlayer, mode: 'fixed', plays: parseInt(q.get('plays'), 10) };
   if (q.get('replays')) c.stimulusPlayer = { ...c.stimulusPlayer, mode: 'replay', maxReplays: q.get('replays') === 'inf' ? Infinity : parseInt(q.get('replays'), 10) };
   c.mock = q.get('mock') === '1';
+  c.mockFail = q.get('mockfail') || null; // testing only: 'gpu' or 'all' (with mock=1)
   c.pid = q.get('pid') || '';
   c.isDemo = q.get('demo') === '1';
   if (c.isDemo) {

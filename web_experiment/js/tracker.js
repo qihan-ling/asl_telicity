@@ -4,12 +4,69 @@
 // "left"/"right" are the signer's own hands. Hands are matched to the pose wrists
 // (landmarks 15 = left wrist, 16 = right wrist), as Holistic does.
 // The source is always the *unmirrored* image (camera frames are only mirrored on screen).
+//
+// Robustness: on some devices the GPU delegate is created fine but every detection call
+// throws. After a few consecutive failures the tracker rebuilds itself on the CPU delegate.
+// processFrame never throws; it returns an empty frame on failure and records the problem
+// in tracker.status = { delegate, frames, errors, lastError, fellBack, fatal, rebuilding }.
 
 const r4 = (v) => (v == null ? null : Math.round(v * 10000) / 10000);
+const EMPTY = Object.freeze({ pose: null, left_hand: null, right_hand: null });
 
-export async function createTracker(mp, { mock = false } = {}) {
-  if (mock) return createMockTracker();
+export async function createTracker(mp, { mock = false, mockFail = null } = {}) {
+  const engine = mock ? createMockEngine(mockFail) : await createMediaPipeEngine(mp);
+  return makeResilient(engine, mp.delegate || 'GPU');
+}
 
+async function makeResilient(engine, preferred) {
+  const status = { delegate: preferred, frames: 0, errors: 0, lastError: null, fellBack: false, fatal: false, rebuilding: false };
+  let impl = null;
+  try { impl = await engine.build(preferred); }
+  catch (e) {
+    if (preferred === 'CPU') throw e;
+    console.warn('GPU delegate could not be created, using CPU', e);
+    status.delegate = 'CPU'; status.fellBack = true; status.lastError = 'GPU init: ' + (e && e.message || e);
+    impl = await engine.build('CPU');
+  }
+  let lastTs = -1, streak = 0;
+  const info = { ...engine.info };
+  Object.defineProperty(info, 'delegate', { get: () => status.delegate, enumerable: true });
+  Object.defineProperty(info, 'fellBackToCPU', { get: () => status.fellBack, enumerable: true });
+
+  function fallBack() {
+    const old = impl; impl = null;
+    status.delegate = 'CPU'; status.fellBack = true; status.rebuilding = true;
+    engine.build('CPU')
+      .then((x) => { impl = x; streak = 0; })
+      .catch((e) => { status.fatal = true; status.lastError = 'CPU rebuild failed: ' + (e && e.message || e); })
+      .finally(() => { status.rebuilding = false; try { old && old.close(); } catch {} });
+  }
+
+  return {
+    status,
+    info,
+    processFrame(source, tsMs) {
+      if (!impl) return EMPTY; // rebuilding
+      const ts = Math.max(Math.round(tsMs), lastTs + 1); // MediaPipe needs strictly increasing timestamps
+      lastTs = ts;
+      try {
+        const f = impl.process(source, ts);
+        streak = 0; status.frames++;
+        return f;
+      } catch (e) {
+        streak++; status.errors++; status.lastError = String((e && e.message) || e);
+        if (status.errors <= 3) console.error('tracking error', e);
+        if (streak >= 3 && status.delegate !== 'CPU' && !status.rebuilding) { console.warn('tracking keeps failing on GPU; switching to CPU'); fallBack(); }
+        else if (streak >= 30 && status.delegate === 'CPU') status.fatal = true;
+        return EMPTY;
+      }
+    },
+    resetClock() { if (impl && impl.resetClock) impl.resetClock(); },
+    close() { try { impl && impl.close(); } catch {} },
+  };
+}
+
+async function createMediaPipeEngine(mp) {
   const cdn = `https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@${mp.version}`;
   const base = mp.source === 'local' ? new URL('../vendor/mediapipe', import.meta.url).href : cdn;
   const models = mp.source === 'local'
@@ -18,10 +75,12 @@ export async function createTracker(mp, { mock = false } = {}) {
         pose: `https://storage.googleapis.com/mediapipe-models/pose_landmarker/pose_landmarker_${mp.poseModel}/float16/1/pose_landmarker_${mp.poseModel}.task`,
         hand: 'https://storage.googleapis.com/mediapipe-models/hand_landmarker/hand_landmarker/float16/1/hand_landmarker.task',
       };
-
   const vision = await import(`${base}/vision_bundle.mjs`);
   const { FilesetResolver, PoseLandmarker, HandLandmarker } = vision;
   const fileset = await FilesetResolver.forVisionTasks(`${base}/wasm`);
+  const crop = document.createElement('canvas');
+  crop.width = crop.height = mp.handCropSize || 512;
+  const cctx = crop.getContext('2d');
 
   async function build(delegate) {
     const pose = await PoseLandmarker.createFromOptions(fileset, {
@@ -29,65 +88,56 @@ export async function createTracker(mp, { mock = false } = {}) {
       runningMode: 'VIDEO', numPoses: 1,
       minPoseDetectionConfidence: 0.5, minPosePresenceConfidence: 0.5, minTrackingConfidence: 0.5,
     });
-    const hands = await HandLandmarker.createFromOptions(fileset, {
-      baseOptions: { modelAssetPath: models.hand, delegate },
-      runningMode: 'VIDEO', numHands: 2,
-      minHandDetectionConfidence: 0.4, minHandPresenceConfidence: 0.4, minTrackingConfidence: 0.4,
-    });
-    return { pose, hands };
-  }
-  let delegate = mp.delegate || 'GPU', lm;
-  try { lm = await build(delegate); } catch (e) { console.warn('GPU delegate failed, using CPU', e); delegate = 'CPU'; lm = await build('CPU'); }
+    let hands;
+    try {
+      hands = await HandLandmarker.createFromOptions(fileset, {
+        baseOptions: { modelAssetPath: models.hand, delegate },
+        runningMode: 'VIDEO', numHands: 2,
+        minHandDetectionConfidence: 0.4, minHandPresenceConfidence: 0.4, minTrackingConfidence: 0.4,
+      });
+    } catch (e) { pose.close(); throw e; }
+    const lm = { pose, hands };
 
-  const crop = document.createElement('canvas');
-  crop.width = crop.height = mp.handCropSize || 512;
-  const cctx = crop.getContext('2d', { willReadFrequently: false });
-  let lastTs = -1;
+    function process(source, ts) {
+      const W = source.videoWidth || source.width, H = source.videoHeight || source.height;
+      if (!W || !H) return EMPTY; // camera not delivering pixels yet
+      const pr = lm.pose.detectForVideo(source, ts);
+      const P = pr.landmarks && pr.landmarks[0] ? pr.landmarks[0] : null;
 
-  function processFrame(source, tsMs) {
-    const ts = Math.max(Math.round(tsMs), lastTs + 1); // MediaPipe needs strictly increasing timestamps
-    lastTs = ts;
-    const W = source.videoWidth || source.width, H = source.videoHeight || source.height;
-    const pr = lm.pose.detectForVideo(source, ts);
-    const P = pr.landmarks && pr.landmarks[0] ? pr.landmarks[0] : null;
-
-    // optional crop around the body for hand detection
-    let handSrc = source, box = null;
-    if (mp.handCrop && P) {
-      const ls = P[11], rs = P[12];
-      const sw = Math.hypot((ls.x - rs.x) * W, (ls.y - rs.y) * H);
-      const side = Math.max(64, sw * (mp.handCropScale || 4));
-      if (side < 0.9 * Math.min(W, H)) {
-        const cx = ((ls.x + rs.x) / 2) * W, cy = ((ls.y + rs.y) / 2) * H + 0.4 * sw;
-        box = { x0: cx - side / 2, y0: cy - side / 2, side };
-        const S = crop.width, k = S / side;
-        const sx = Math.max(0, box.x0), sy = Math.max(0, box.y0);
-        const ex = Math.min(W, box.x0 + side), ey = Math.min(H, box.y0 + side);
-        cctx.fillStyle = '#000'; cctx.fillRect(0, 0, S, S);
-        if (ex > sx && ey > sy) cctx.drawImage(source, sx, sy, ex - sx, ey - sy, (sx - box.x0) * k, (sy - box.y0) * k, (ex - sx) * k, (ey - sy) * k);
-        handSrc = crop;
+      // optional crop around the body for hand detection
+      let handSrc = source, box = null;
+      if (mp.handCrop && P) {
+        const ls = P[11], rs = P[12];
+        const sw = Math.hypot((ls.x - rs.x) * W, (ls.y - rs.y) * H);
+        const side = Math.max(64, sw * (mp.handCropScale || 4));
+        if (side < 0.9 * Math.min(W, H)) {
+          const cx = ((ls.x + rs.x) / 2) * W, cy = ((ls.y + rs.y) / 2) * H + 0.4 * sw;
+          box = { x0: cx - side / 2, y0: cy - side / 2, side };
+          const S = crop.width, k = S / side;
+          const sx = Math.max(0, box.x0), sy = Math.max(0, box.y0);
+          const ex = Math.min(W, box.x0 + side), ey = Math.min(H, box.y0 + side);
+          cctx.fillStyle = '#000'; cctx.fillRect(0, 0, S, S);
+          if (ex > sx && ey > sy) cctx.drawImage(source, sx, sy, ex - sx, ey - sy, (sx - box.x0) * k, (sy - box.y0) * k, (ex - sx) * k, (ey - sy) * k);
+          handSrc = crop;
+        }
       }
+      const hr = lm.hands.detectForVideo(handSrc, ts);
+      const toFull = (p) => box
+        ? { x: (box.x0 + p.x * box.side) / W, y: (box.y0 + p.y * box.side) / H, z: (p.z * box.side) / W }
+        : p;
+      const handList = (hr.landmarks || []).map((h) => h.map(toFull));
+      const labels = hr.handedness || hr.handednesses || [];
+      const { left, right } = assignHands(handList, labels, P, W, H);
+      return {
+        pose: P ? P.map((p) => [r4(p.x), r4(p.y), r4(p.z), r4(p.visibility ?? null)]) : null,
+        left_hand: left ? left.map((p) => [r4(p.x), r4(p.y), r4(p.z)]) : null,
+        right_hand: right ? right.map((p) => [r4(p.x), r4(p.y), r4(p.z)]) : null,
+      };
     }
-    const hr = lm.hands.detectForVideo(handSrc, ts);
-    const toFull = (p) => box
-      ? { x: (box.x0 + p.x * box.side) / W, y: (box.y0 + p.y * box.side) / H, z: (p.z * box.side) / W }
-      : p;
-    const handList = (hr.landmarks || []).map((h) => h.map(toFull));
-    const labels = hr.handedness || hr.handednesses || [];
-    const { left, right } = assignHands(handList, labels, P, W, H);
-
-    return {
-      pose: P ? P.map((p) => [r4(p.x), r4(p.y), r4(p.z), r4(p.visibility ?? null)]) : null,
-      left_hand: left ? left.map((p) => [r4(p.x), r4(p.y), r4(p.z)]) : null,
-      right_hand: right ? right.map((p) => [r4(p.x), r4(p.y), r4(p.z)]) : null,
-    };
+    return { process, close() { lm.pose.close(); lm.hands.close(); } };
   }
 
-  return {
-    processFrame,
-    info: { library: '@mediapipe/tasks-vision', version: mp.version, source: mp.source, models, delegate, handCrop: !!mp.handCrop, mock: false },
-    close() { lm.pose.close(); lm.hands.close(); },
-  };
+  return { build, info: { library: '@mediapipe/tasks-vision', version: mp.version, source: mp.source, models, handCrop: !!mp.handCrop, mock: false } };
 }
 
 export function assignHands(hands, labels, P, W, H) {
@@ -116,7 +166,9 @@ export function assignHands(hands, labels, P, W, H) {
 // ---------------------------------------------------------------------------
 // Mock tracker: synthetic upper-body skeleton, for testing the experiment flow
 // without a camera model (?mock=1). The motion depends on time only.
-function createMockTracker() {
+// ?mockfail=gpu  -> every detection throws on the GPU delegate (tests the CPU fallback)
+// ?mockfail=all  -> every detection throws (tests the "tracking didn't start" message)
+function createMockEngine(mockFail) {
   function frameAt(sec, seed = 0) {
     const pose = [];
     for (let i = 0; i < 33; i++) pose.push([0.5, 0.9, 0, 0.2]);
@@ -143,15 +195,20 @@ function createMockTracker() {
       left_hand: act > 0.5 ? hand(lw, 0.2).map((p) => p.map(r4)) : null,
     };
   }
-  let t0 = null;
   return {
-    processFrame(source, tsMs) {
-      if (source && source.tagName === 'VIDEO' && !source.srcObject) return frameAt(source.currentTime, 0); // stimulus video
-      if (t0 === null) t0 = tsMs;
-      return frameAt(((tsMs - t0) / 1000) % 4, 0.3);
-    },
-    resetClock() { t0 = null; },
     info: { library: 'mock', version: '0', mock: true },
-    close() {},
+    async build(delegate) {
+      let t0 = null;
+      return {
+        process(source, tsMs) {
+          if (mockFail === 'all' || (mockFail === 'gpu' && delegate === 'GPU')) throw new Error('mock detection failure on ' + delegate);
+          if (source && source.tagName === 'VIDEO' && !source.srcObject) return frameAt(source.currentTime, 0); // stimulus video
+          if (t0 === null) t0 = tsMs;
+          return frameAt(((tsMs - t0) / 1000) % 4, 0.3);
+        },
+        resetClock() { t0 = null; },
+        close() {},
+      };
+    },
   };
 }

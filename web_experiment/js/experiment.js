@@ -52,7 +52,7 @@ async function setup(pid, msg) {
   const camera = new Camera();
   await camera.start();
   msg.textContent = 'Loading the tracking model…';
-  const tracker = await createTracker(cfg.mediapipe, { mock: cfg.mock });
+  const tracker = await createTracker(cfg.mediapipe, { mock: cfg.mock, mockFail: cfg.mockFail });
 
   msg.textContent = 'Loading stimuli…';
   const items = orderItems(cfg.itemOrder, cfg.nItems);
@@ -102,23 +102,49 @@ async function cameraCheck(camera, tracker) {
   camera.video.play().catch(() => {});
   const ov = cw.querySelector('canvas'), ctx = ov.getContext('2d');
   const ok = document.getElementById('ok'), st = document.getElementById('st'), ul = document.getElementById('checks');
-  let goodSince = null, passed = false;
+  let goodSince = null, passed = false, tracked = 0;
+  const t0 = performance.now();
   const loop = frameLoop(camera.video, (now) => {
     const f = tracker.processFrame(camera.video, now);
     ov.width = camera.width; ov.height = camera.height;
     const ev = evaluateFraming(f, fr);
     drawBox(ctx, ov.width, ov.height, ev.ok, fr);
+    if (f.pose) tracked++;
     drawFrame(ctx, f, imageMap(ov.width, ov.height, true), colors().live, { lw: Math.max(2, ov.width / 250) });
     ul.innerHTML = ev.checks.map((c) => `<li class="${c.ok ? 'ok' : ''}">${c.ok ? '✓' : '○'} ${c.label}</li>`).join('');
     if (ev.ok) {
       if (goodSince === null) goodSince = now;
       if (now - goodSince >= fr.holdMs) passed = true;
     } else goodSince = null;
+    const ts = tracker.status || {};
     if (passed) { ok.disabled = false; st.textContent = 'All set. You can continue.'; }
+    else if (ts.rebuilding) st.textContent = 'Switching to a more compatible tracking mode… (a few seconds)';
     else if (ev.ok) st.textContent = 'Hold still…';
     else st.textContent = ev.checks.find((c) => !c.ok).hint;
   });
+  // If tracking never starts (no frames, or every frame fails), say so instead of freezing.
+  const diag = document.createElement('div');
+  diag.className = 'note'; diag.hidden = true;
+  st.after(diag);
+  const watch = setInterval(() => {
+    const ts = tracker.status || {}, ls = loop.stats;
+    const stalled = performance.now() - t0 > 10000 && tracked === 0 && !ts.rebuilding;
+    if (!stalled && !ts.fatal) return;
+    const why = ls.calls === 0 ? 'No camera frames are arriving in the page.'
+      : (ts.errors || ls.errors) ? 'Body tracking is failing on this device.' : 'No body has been detected yet.';
+    diag.hidden = false;
+    diag.innerHTML = `<strong>${why}</strong>
+      <p>Please make sure no other app or tab is using the camera, use an up-to-date Chrome, Edge or Safari, and reload.
+        If it still does not work, please send a screenshot of this box to the researcher.</p>
+      <p class="small muted">${esc(navigator.userAgent)}<br>
+        tracker: ${esc(ts.delegate || '?')}${ts.fellBack ? ' (fell back from GPU)' : ''} · frames: ${ls.calls} (loop: ${esc(ls.mode)}, restarts ${ls.restarts}) ·
+        detected: ${tracked} · errors: ${(ts.errors || 0) + ls.errors}<br>${esc(ts.lastError || ls.lastError || '')}</p>
+      <div class="row"><button class="btn" id="reload">Reload page</button></div>`;
+    diag.querySelector('#reload').onclick = () => location.reload();
+    if (tracked > 0) { diag.hidden = true; }
+  }, 2000);
   await waitClick(ok);
+  clearInterval(watch);
   loop.stop();
 }
 
@@ -201,6 +227,7 @@ function askQuestion(stage, ph, q) {
 
 async function finish(session, refs, camera, tracker, media) {
   camera.stop(); tracker.close();
+  session.trackerStatus = { ...(tracker.status || {}) };
   session.endedAt = new Date().toISOString();
   session.completed = true;
   await backup(session);

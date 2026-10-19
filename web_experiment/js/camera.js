@@ -31,16 +31,47 @@ export class Camera {
   stop() { if (this.stream) this.stream.getTracks().forEach((t) => t.stop()); this.stream = null; }
 }
 
-/** Runs cb(nowMs) for every new camera frame until stop() is called. */
+/**
+ * Runs cb(nowMs) for every new camera frame until stop() is called.
+ * Uses requestVideoFrameCallback when available; a watchdog restarts playback and switches to a
+ * requestAnimationFrame loop if frames stop arriving (some browsers pause a moved <video> or never
+ * fire video-frame callbacks). Errors thrown by cb are counted and the last one is kept in
+ * loop.stats instead of failing silently.
+ */
 export function frameLoop(video, cb) {
-  let on = true, handle = null;
-  const useRVFC = 'requestVideoFrameCallback' in HTMLVideoElement.prototype;
-  let lastTime = -1;
-  const step = (now) => {
-    if (!on) return;
-    if (useRVFC || video.currentTime !== lastTime) { lastTime = video.currentTime; try { cb(performance.now()); } catch (e) { console.error(e); } }
-    handle = useRVFC ? video.requestVideoFrameCallback(step) : requestAnimationFrame(step);
+  let on = true, handle = null, rafHandle = null;
+  let useRVFC = 'requestVideoFrameCallback' in HTMLVideoElement.prototype;
+  let lastTime = -1, lastFire = performance.now();
+  const stats = { calls: 0, errors: 0, lastError: null, mode: useRVFC ? 'video-frame' : 'animation-frame', restarts: 0 };
+  const run = () => {
+    lastFire = performance.now(); stats.calls++;
+    try { cb(performance.now()); } catch (e) { stats.errors++; stats.lastError = String((e && e.message) || e); if (stats.errors <= 3) console.error(e); }
   };
-  handle = useRVFC ? video.requestVideoFrameCallback(step) : requestAnimationFrame(step);
-  return { stop() { on = false; if (!useRVFC && handle) cancelAnimationFrame(handle); } };
+  const stepRVFC = () => { if (!on || !useRVFC) return; run(); handle = video.requestVideoFrameCallback(stepRVFC); };
+  const stepRAF = () => {
+    if (!on) return;
+    if (video.currentTime !== lastTime) { lastTime = video.currentTime; run(); }
+    rafHandle = requestAnimationFrame(stepRAF);
+  };
+  if (useRVFC) handle = video.requestVideoFrameCallback(stepRVFC); else rafHandle = requestAnimationFrame(stepRAF);
+  const watchdog = setInterval(() => {
+    if (!on) return;
+    if (performance.now() - lastFire < 1500) return;
+    stats.restarts++;
+    if (video.paused) video.play().catch(() => {});
+    if (useRVFC) { // video-frame callbacks have stalled: fall back to polling
+      useRVFC = false; stats.mode = 'animation-frame';
+      try { video.cancelVideoFrameCallback && video.cancelVideoFrameCallback(handle); } catch {}
+      rafHandle = requestAnimationFrame(stepRAF);
+    }
+    lastFire = performance.now();
+  }, 1000);
+  return {
+    stats,
+    stop() {
+      on = false; clearInterval(watchdog);
+      if (rafHandle) cancelAnimationFrame(rafHandle);
+      try { if (handle && video.cancelVideoFrameCallback) video.cancelVideoFrameCallback(handle); } catch {}
+    },
+  };
 }

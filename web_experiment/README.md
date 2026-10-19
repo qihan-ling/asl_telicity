@@ -55,6 +55,13 @@ box at a reasonable distance (shoulder width 15–50% of the image) and both rai
 for 1 s. The thresholds are in `CONFIG.framing`. Before each recording the same box and hints are shown again
 as advice only. Face landmarks are tracked and saved but never drawn on screen.
 
+### If tracking fails on a device
+If MediaPipe's GPU mode crashes on some graphics hardware or browsers, the tracker switches to CPU mode
+automatically after 3 failed frames (slower but more compatible). If tracking still hasn't started after 10 s, the
+camera-check screen shows a box with the browser, tracker mode, frame and error counts, and the last error message,
+so testers can send a screenshot. The final tracker state is saved in the data file (`trackerStatus`). For testing:
+`?mock=1&mockfail=gpu` simulates a GPU failure, and `?mock=1&mockfail=all` a total failure.
+
 ## Trial flow
 1. **Watch** (`js/stimulusPlayer.js`): a standalone module that knows nothing about the camera or
    the experiment. Policy `replay` (one automatic play, then optional replays) or `fixed`
