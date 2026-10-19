@@ -86,7 +86,8 @@ export class SkeletonPlayer {
     this.tracks.forEach((tr, k) => {
       let f;
       if (this.alignment && this.tracks.length === 2) {
-        const step = this.alignment[Math.min(this.alignment.length - 1, Math.floor(this.pos * this.alignment.length))];
+        const idx = Math.max(0, Math.min(this.alignment.length - 1, Math.floor(this.pos * this.alignment.length) || 0));
+        const step = this.alignment[idx];
         const tt = (k === 0 ? this.times.a : this.times.b)[step[k]];
         f = this._frameAtT(tr.frames, tt);
       } else {
@@ -102,7 +103,8 @@ export class SkeletonPlayer {
     const tick = (now) => {
       if (!this.playing) return;
       const dur = this.alignment ? Math.max(this.duration, this.alignment.length * 40) : this.duration;
-      this.pos += ((now - last) * this.speed) / dur; last = now;
+      // rAF timestamps can be slightly earlier than performance.now() at play(): never move backwards
+      this.pos = Math.max(0, this.pos + (Math.max(0, now - last) * this.speed) / dur); last = Math.max(last, now);
       if (this.pos >= 1) { if (this.loop) this.pos = 0; else { this.pos = 1; this.playing = false; } }
       this.draw(); if (this.onTick) this.onTick(this.pos);
       this._raf = requestAnimationFrame(tick);
