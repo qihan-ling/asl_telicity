@@ -4,7 +4,9 @@
 //   ?n=6            only the first n items (after ordering)
 //   ?plays=2        stimulus player in 'fixed' mode, 2 plays per item
 //   ?replays=3      stimulus player in 'replay' mode, up to 3 replays ('inf' = unlimited)
-//   ?demo=1         demo version (CONFIG.demo: 3 fixed items, no ID prompt, results shown)
+//   ?demo=1         demo version (same trials as the real study; no ID prompt, optional download)
+//   ?cond=correct|same|opposite   force the meaning condition (otherwise random per participant)
+//   ?columns=random use the random_* meaning columns instead of same_telicity / opposite_telicity
 //   ?mock=1         run without MediaPipe/camera model (synthetic landmarks; for testing the flow)
 
 export const CONFIG = {
@@ -12,9 +14,25 @@ export const CONFIG = {
   stimuliBase: 'stimuli/',
   referencesUrl: 'data/references.json',
 
-  // 'random' | 'fixed' (stimuli.js order) | 'list1'..'list4' (Wagner et al. Exp. 1A lists)
-  itemOrder: 'random',
-  nItems: null, // null = all items
+  // 'balanced' = draw critical.nTelic telic + critical.nAtelic atelic items at random, in random order
+  // (other options: 'random' (all 12 shuffled), 'fixed', 'list1'..'list4', 'ids:buy,talk')
+  itemOrder: 'balanced',
+  critical: { nTelic: 1, nAtelic: 1 },
+  nItems: null, // null = all drawn items
+
+  // ---- Practice trials (stimuli.js PRACTICE): shown after the camera check, not scored ----
+  practice: { enabled: true },
+
+  // ---- Meaning page before each sign (data/sign_meanings.csv) ----
+  // condition: 'random' (one of correct / same / opposite per participant) or force one of them.
+  // columns: 'matched' (same_telicity / opposite_telicity) or 'random' (random_same_telicity / random_opposite_telicity).
+  meanings: {
+    enabled: true,
+    url: 'data/sign_meanings.csv',
+    condition: 'random',
+    columns: 'matched',
+    lead: 'The next sign means:',
+  },
 
   // ---- Stimulus player (independent module, js/stimulusPlayer.js) ----
   // mode 'replay': plays once, then participant may replay up to maxReplays times (Infinity = unlimited).
@@ -45,8 +63,8 @@ export const CONFIG = {
   },
 
   // ---- Demo version (?demo=1 or demo.html) ----
-  // Fixed short item list, no participant-ID prompt, results shown at the end.
-  demo: { items: ['buy', 'talk', 'die'], pidPrefix: 'demo' },
+  // Same trials as the real study; no participant-ID prompt, results shown, download optional.
+  demo: { pidPrefix: 'demo' },
 
   // ---- Optional post-trial question (none for now) ----
   // e.g. { type: 'text', prompt: 'What do you think this sign means?', required: true }
@@ -80,12 +98,12 @@ export function applyUrlOverrides(cfg) {
   if (q.get('plays')) c.stimulusPlayer = { ...c.stimulusPlayer, mode: 'fixed', plays: parseInt(q.get('plays'), 10) };
   if (q.get('replays')) c.stimulusPlayer = { ...c.stimulusPlayer, mode: 'replay', maxReplays: q.get('replays') === 'inf' ? Infinity : parseInt(q.get('replays'), 10) };
   c.mock = q.get('mock') === '1';
-  c.mockFail = q.get('mockfail') || null; // testing only: 'gpu' or 'all' (with mock=1)
+  c.mockFail = q.get('mockfail') || null; // testing only: 'gpu', 'all' or 'nowebgl' (with mock=1)
   c.pid = q.get('pid') || '';
   c.isDemo = q.get('demo') === '1';
+  if (q.get('cond')) c.meanings.condition = q.get('cond');
+  if (q.get('columns')) c.meanings.columns = q.get('columns');
   if (c.isDemo) {
-    c.itemOrder = 'ids:' + c.demo.items.join(',');
-    c.nItems = null;
     c.showResultsToParticipant = true;
     if (!c.pid) c.pid = c.demo.pidPrefix + '-' + Math.random().toString(36).slice(2, 7);
   }

@@ -13,6 +13,39 @@
 const r4 = (v) => (v == null ? null : Math.round(v * 10000) / 10000);
 const EMPTY = Object.freeze({ pose: null, left_hand: null, right_hand: null });
 
+/**
+ * MediaPipe's web tasks hand every frame to the model through WebGL, even with the CPU delegate,
+ * so they cannot run in a browser without WebGL (graphics acceleration off, GPU/driver blocklisted,
+ * some remote desktops / VMs). Returns { ok, webgl2, webgl1, renderer }.
+ */
+export function checkWebGL() {
+  const out = { ok: false, webgl2: false, webgl1: false, renderer: null };
+  try {
+    const c = document.createElement('canvas');
+    let gl = c.getContext('webgl2');
+    out.webgl2 = !!gl;
+    if (!gl) { gl = c.getContext('webgl'); out.webgl1 = !!gl; }
+    if (gl) {
+      const ext = gl.getExtension('WEBGL_debug_renderer_info');
+      out.renderer = ext ? gl.getParameter(ext.UNMASKED_RENDERER_WEBGL) : gl.getParameter(gl.RENDERER);
+      const lose = gl.getExtension('WEBGL_lose_context'); if (lose) lose.loseContext();
+    }
+  } catch {}
+  out.ok = out.webgl2 || out.webgl1;
+  return out;
+}
+
+export const WEBGL_HELP = `<strong>Your browser's graphics acceleration (WebGL) is not available, so body tracking cannot run.</strong>
+  <p>To fix this, try in order:</p>
+  <ol>
+    <li>In Chrome or Edge, open <b>Settings → System</b>, turn on <b>"Use graphics acceleration when available"</b>,
+      then click <b>Relaunch</b>.</li>
+    <li>Make sure the laptop is plugged in and not in battery-saver mode, and update its graphics driver
+      (Windows Update → Advanced options → Optional updates, or the Intel/AMD/NVIDIA website).</li>
+    <li>Try another browser (Edge, Chrome or Firefox), or another computer, iPad or phone.</li>
+  </ol>
+  <p class="small muted">You can check at <b>chrome://gpu</b> (look for "WebGL: Hardware accelerated") or at get.webgl.org.</p>`;
+
 export async function createTracker(mp, { mock = false, mockFail = null } = {}) {
   const engine = mock ? createMockEngine(mockFail) : await createMediaPipeEngine(mp);
   return makeResilient(engine, mp.delegate || 'GPU');

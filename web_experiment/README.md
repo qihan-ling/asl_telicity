@@ -30,16 +30,40 @@ or the MediaPipe settings change. If the file is missing, the experiment compute
 while it loads (this works, but it is slower).
 
 ### Demo version
-Send people **`demo.html`**, which opens `index.html?demo=1`. The demo has 3 signs (*buy*, *die*, *talk*,
-covering both telic and atelic; set them in `CONFIG.demo.items`), no participant-ID prompt, and the results shown
-at the end, with the data download optional. Everything else works the same as the full experiment.
+Send people **`demo.html`**, which opens `index.html?demo=1`. The demo runs the same trials as the real study
+(practice, then 1 telic + 1 atelic sign drawn at random, with meaning pages), but it skips the participant-ID
+prompt and makes the data download optional.
+
+### Session structure
+Camera check → instructions → **2 practice trials** (*laugh*, then *zip up*; ASL clips in `stimuli/practice/`,
+always shown with their correct meaning, landmarks saved, **not scored**, not on the results page) →
+"Practice complete" → **2 critical trials**: 1 telic and 1 atelic sign drawn at random from the 12, in random
+order (`itemOrder: 'balanced'`, `critical: { nTelic, nAtelic }` in `js/config.js`) → results.
+
+### Meaning condition
+Before each sign, a separate page shows *"The next sign means: …"* with a **Continue** button, then the video page.
+Each participant is randomly assigned **one condition for all critical items**:
+
+| condition | meaning shown | CSV column |
+|---|---|---|
+| `correct` | the sign's own meaning | `sign` |
+| `same` | a wrong meaning of the **same** telicity | `same_telicity` |
+| `opposite` | a wrong meaning of the **opposite** telicity | `opposite_telicity` |
+
+Meanings come from `data/sign_meanings.csv`, a copy of `asl_production_data_sign_multiple_meanings.csv`
+read when the page loads, so you can edit it without touching the code. Set `meanings.columns: 'random'`
+(or `?columns=random`) to use `random_same_telicity` / `random_opposite_telicity` instead. Assignment is
+simple random (no server), so group sizes are only balanced on average; for exact counterbalancing, give
+participants links with `?cond=correct`, `?cond=same` or `?cond=opposite`.
 
 ### URL options
 | | |
 |---|---|
 | `?demo=1` | demo version (same as opening `demo.html`) |
+| `?cond=correct` / `same` / `opposite` | force the meaning condition (default: random per participant) |
+| `?columns=random` | use the `random_*` meaning columns |
 | `?pid=P01` | participant ID (otherwise the start screen asks for it) |
-| `?list=1` … `?list=4` | Wagner Exp. 1A counterbalancing order (default: random) |
+| `?list=1` … `?list=4` | all 12 items in a Wagner Exp. 1A order (default: 1 telic + 1 atelic at random) |
 | `?n=6` | only the first *n* items |
 | `?plays=2` | stimulus player in **fixed** mode: every item plays exactly 2 times, with no replays |
 | `?replays=3` / `?replays=inf` | stimulus player in **replay** mode, with a replay limit |
@@ -59,10 +83,14 @@ as advice only. Face landmarks are tracked and saved but never drawn on screen.
 If MediaPipe's GPU mode crashes on some graphics hardware or browsers, the tracker switches to CPU mode
 automatically after 3 failed frames (slower but more compatible). If tracking still hasn't started after 10 s, the
 camera-check screen shows a box with the browser, tracker mode, frame and error counts, and the last error message,
-so testers can send a screenshot. The final tracker state is saved in the data file (`trackerStatus`). For testing:
+so testers can send a screenshot.
+MediaPipe's web tasks need **WebGL** even in CPU mode. If the browser has none (graphics acceleration
+switched off, a blocklisted GPU driver, some remote desktops or VMs), the start page detects this and shows
+step-by-step fix instructions instead of starting (`?mock=1&mockfail=nowebgl` simulates it). The final tracker state is saved in the data file (`trackerStatus`). For testing:
 `?mock=1&mockfail=gpu` simulates a GPU failure, and `?mock=1&mockfail=all` a total failure.
 
 ## Trial flow
+0. **Meaning page** (see above): its own screen with **Continue**. The time spent on it is saved (`meaning.rtMs`).
 1. **Watch** (`js/stimulusPlayer.js`): a standalone module that knows nothing about the camera or
    the experiment. Policy `replay` (one automatic play, then optional replays) or `fixed`
    (*k* automatic plays, which gives every participant equal exposure). Every play is logged.
@@ -79,8 +107,12 @@ The data is backed up to the browser's IndexedDB after every trial. If the page 
 accident, the start screen offers to download the unfinished session.
 
 ## Results page
-The scores are grouped into Set 1 (telic) and Set 2 (atelic) without naming them. **Want to know more?** opens
-a page explaining the distinction. The participant-facing text is at the top of `js/results.js`.
+No scores are shown (they are still computed and saved). For each critical sign, labelled *Sign 1* / *Sign 2* so
+the real meaning is not given away, the page shows the model video next to the overlay of the model's and the
+participant's movements, grouped into Set 1 (telic) and Set 2 (atelic) without naming them.
+**Want to know more?** explains the telic/atelic difference, describes the three meaning groups and which one the
+participant was in, and lists for each sign the meaning shown next to its actual meaning. All participant-facing
+text is in `TEXT` at the top of `js/results.js`.
 
 ## Hosting on GitHub Pages
 In the repo, go to Settings → Pages → *Deploy from a branch* → `main` / `(root)` → Save. After about a minute the
@@ -89,6 +121,11 @@ Pages uses HTTPS, so the camera works on iPads and phones. An empty `.nojekyll` 
 stops GitHub from running Jekyll on the folder.
 
 ## Data file (`<study>_<pid>_<time>.json`)
+Session-level: `meaningCondition`, `meaningColumns`, `itemOrder` (critical items), `practiceItems`.
+Per trial: `block` (`practice` / `critical`), `blockIndex`, and `meaning` = `{ condition, shown, correct, column, rtMs }`.
+Practice trials have no `similarity`. `tools/load_results.py` writes these as CSV columns and names practice
+pickles `<pid>_practice_<telicity>_<item>.pkl`; `tools/rescore.mjs` skips practice trials.
+
 One file per session, with the session info, device, camera resolution, tracker and model versions,
 the full config, and for each trial:
 `item`, `stimulus` (play log), `recording` (`frames`, `attempts`, `discarded`, `durationMs`,

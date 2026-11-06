@@ -16,6 +16,7 @@ console.log('file,participant,trial,item,telicity,score,distance,mirrored,wrist,
 for (const f of files) {
   const s = JSON.parse(fs.readFileSync(f, 'utf8'));
   for (const t of s.trials) {
+    if (t.block === 'practice' || t.item.practice) continue; // practice trials are not scored
     const ref = refs.items[t.item.id];
     const r = t.recording;
     const sim = compareSequences(ref.frames, ref.width / ref.height, r.frames, r.width / r.height, opts);

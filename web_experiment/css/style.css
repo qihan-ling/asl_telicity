@@ -82,3 +82,11 @@ table.results th, table.results td { text-align: left; padding: 6px 6px; border-
 .set { margin: 18px 0; }
 .set h3 { font-size: 1.05rem; margin: 0 0 6px; }
 .res-more p { max-width: 70ch; }
+
+/* meaning page */
+.meaning { text-align: center; padding: 6vh 0 2vh; }
+.meaning-word { font-size: clamp(2rem, 6vw, 3.2rem); font-weight: 700; margin: 0.3em 0 0.8em; }
+/* results: one block per sign */
+.set { margin: 18px 0; }
+.item h4 { margin: 10px 0 4px; font-size: 1rem; }
+table.meanings { max-width: 640px; }

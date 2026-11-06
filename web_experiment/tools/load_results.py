@@ -48,17 +48,22 @@ def main():
             rec = t["recording"]
             rows.append({
                 "file": os.path.basename(p), "participant": s.get("participantId"), "session": s.get("sessionId"),
-                "trial": t["index"] + 1, "item": t["item"]["id"], "telicity": t["item"].get("telicity"),
+                "trial": t["index"] + 1, "block": t.get("block", "critical"), "item": t["item"]["id"], "telicity": t["item"].get("telicity"),
                 "domain": t["item"].get("domain"), "score": sim.get("score"), "distance": sim.get("distance"),
                 "mirrored": sim.get("mirrored"), "wrist": (sim.get("components") or {}).get("wrist"),
                 "elbow": (sim.get("components") or {}).get("elbow"), "hand": (sim.get("components") or {}).get("hand"),
                 "plays": t["stimulus"]["totalPlays"], "attempts": rec["attempts"], "duration_ms": rec["durationMs"],
                 "n_frames": rec["nFrames"], "pose_ratio": rec["poseRatio"], "hand_ratio": rec["handRatio"],
                 "response": (t.get("response") or {}).get("answer"),
+                "meaning_condition": (t.get("meaning") or {}).get("condition"),
+                "meaning_shown": (t.get("meaning") or {}).get("shown"),
+                "meaning_correct": (t.get("meaning") or {}).get("correct"),
+                "meaning_rt_ms": (t.get("meaning") or {}).get("rtMs"),
             })
             if a.pkl_dir:
                 os.makedirs(a.pkl_dir, exist_ok=True)
-                name = f"{s.get('participantId')}_{t['item'].get('telicity')}_{t['item']['id']}.pkl"
+                prefix = "practice_" if t.get("block") == "practice" else ""
+                name = f"{s.get('participantId')}_{prefix}{t['item'].get('telicity')}_{t['item']['id']}.pkl"
                 with open(os.path.join(a.pkl_dir, name), "wb") as fh:
                     pickle.dump(trial_to_holistic(t), fh)
     if a.csv:

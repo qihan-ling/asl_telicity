@@ -1,8 +1,8 @@
 // experiment.js — flow: start -> camera check -> trials (watch, sign, [question]) -> results + data.
 
 import { CONFIG, applyUrlOverrides } from './config.js';
-import { orderItems } from './stimuli.js';
-import { createTracker } from './tracker.js';
+import { orderItems, PRACTICE, loadMeanings, pickCondition, meaningFor } from './stimuli.js';
+import { createTracker, checkWebGL, WEBGL_HELP } from './tracker.js';
 import { Camera, frameLoop } from './camera.js';
 import { StimulusPlayer } from './stimulusPlayer.js';
 import { Recorder } from './recorder.js';
@@ -24,7 +24,7 @@ async function start() {
   screen(`
     <h1>Repeat the signs you see!</h1>
     <p>You will watch short videos of signs. After each video, imitate the sign you just watched.</p>
-    ${cfg.isDemo ? `<p class="muted">This is a short demo with ${cfg.demo.items.length} signs.</p>` : ''}
+    ${cfg.isDemo ? `<p class="muted">This is a short demo version of the study.</p>` : ''}
     <p class="muted">No video or pictures of you are saved or sent anywhere. Only the movements of your body and hands are saved, as numbers.</p>
     <label class="field" ${cfg.isDemo ? 'hidden' : ''}>Participant ID <input id="pid" autocomplete="off" value="${esc(cfg.pid)}"></label>
     <div class="row"><button class="btn primary" id="go">Start</button></div>
@@ -48,6 +48,15 @@ async function start() {
 }
 
 async function setup(pid, msg) {
+  const gl = cfg.mock && cfg.mockFail !== 'nowebgl' ? { ok: true } : checkWebGL();
+  if (cfg.mockFail === 'nowebgl') gl.ok = false;
+  if (!gl.ok) {
+    screen(`<h2>This browser can't run the study</h2><div class="note">${WEBGL_HELP}</div>
+      <p class="small muted">${esc(navigator.userAgent)}</p>
+      <div class="row"><button class="btn" id="reload">Reload page</button></div>`);
+    document.getElementById('reload').onclick = () => location.reload();
+    await new Promise(() => {}); // stop here
+  }
   msg.textContent = 'Starting camera…';
   const camera = new Camera();
   await camera.start();
@@ -55,10 +64,15 @@ async function setup(pid, msg) {
   const tracker = await createTracker(cfg.mediapipe, { mock: cfg.mock, mockFail: cfg.mockFail });
 
   msg.textContent = 'Loading stimuli…';
-  const items = orderItems(cfg.itemOrder, cfg.nItems);
+  const items = orderItems(cfg.itemOrder, cfg.nItems, cfg.critical);
+  const practice = cfg.practice && cfg.practice.enabled ? PRACTICE : [];
+  // meaning shown before each sign: one condition per participant
+  const mc = cfg.meanings || {};
+  const meaningTable = mc.enabled ? await loadMeanings(mc.url) : null;
+  const condition = mc.enabled ? pickCondition(mc.condition) : null;
   // keep every stimulus in memory (instant, seekable playback; no network needed during trials)
   const media = {};
-  for (const it of items) {
+  for (const it of [...practice, ...items]) {
     const r = await fetch(cfg.stimuliBase + it.file);
     if (!r.ok) throw new Error('Cannot load ' + cfg.stimuliBase + it.file);
     media[it.id] = URL.createObjectURL(await r.blob());
@@ -77,13 +91,17 @@ async function setup(pid, msg) {
 
   const session = newSession(cfg, pid, {
     tracker: tracker.info,
+    webgl: cfg.mock ? null : checkWebGL(),
     camera: camera.settings,
     references: { source: refs.computedLive ? 'computed-live' : cfg.referencesUrl, createdAt: refs.createdAt || null, tracker: refs.tracker || null },
     itemOrder: items.map((i) => i.id),
+    practiceItems: practice.map((i) => i.id),
+    meaningCondition: condition,          // 'correct' | 'same' | 'opposite' (null if meaning pages are off)
+    meaningColumns: mc.enabled ? mc.columns : null,
   });
   await cameraCheck(camera, tracker);
-  await instructions(items.length);
-  await runTrials({ session, items, camera, tracker, refs, media });
+  await instructions(items.length, practice.length);
+  await runTrials({ session, items, practice, camera, tracker, refs, media, meaningTable, condition });
   await finish(session, refs, camera, tracker, media);
 }
 
@@ -133,6 +151,13 @@ async function cameraCheck(camera, tracker) {
     const why = ls.calls === 0 ? 'No camera frames are arriving in the page.'
       : (ts.errors || ls.errors) ? 'Body tracking is failing on this device.' : 'No body has been detected yet.';
     diag.hidden = false;
+    const glErr = /activeTexture|webgl|WebGL|getContext|gl\./.test(String(ts.lastError || ls.lastError || ''));
+    if (glErr) {
+      diag.innerHTML = `${WEBGL_HELP}<p class="small muted">${esc(navigator.userAgent)}<br>${esc(ts.lastError || ls.lastError || '')}</p>
+        <div class="row"><button class="btn" id="reload">Reload page</button></div>`;
+      diag.querySelector('#reload').onclick = () => location.reload();
+      return;
+    }
     diag.innerHTML = `<strong>${why}</strong>
       <p>Please make sure no other app or tab is using the camera, use an up-to-date Chrome, Edge or Safari, and reload.
         If it still does not work, please send a screenshot of this box to the researcher.</p>
@@ -148,7 +173,7 @@ async function cameraCheck(camera, tracker) {
   loop.stop();
 }
 
-async function instructions(n) {
+async function instructions(n, nPractice = 0) {
   const sp = cfg.stimulusPlayer;
   const watch = sp.mode === 'fixed'
     ? `Each video will play ${sp.plays} time${sp.plays > 1 ? 's' : ''}.`
@@ -156,6 +181,7 @@ async function instructions(n) {
   screen(`
     <h2>Instructions</h2>
     <ol class="steps">
+      ${cfg.meanings && cfg.meanings.enabled ? '<li>Read what the next sign means, then press <b>Continue</b>.</li>' : ''}
       <li>Watch the sign. ${watch}</li>
       <li>Press <b>Start recording</b>. After a short countdown, copy the sign as closely as you can, then press <b>Stop</b>.</li>
       <li>Watch your recording. Press <b>Start over</b> to record again, or <b>Confirm &amp; submit</b> to go on to the next sign.</li>
@@ -170,17 +196,35 @@ async function instructions(n) {
         points that locate your head (nose, eyes, ears, mouth corners), but no image of your face is kept, and those points are not shown on screen.
         At the end you will see your movements as simple stick figures.</p>
     </div>
-    <p>There are ${n} signs.</p>
+    <p>${nPractice ? `You will start with ${nPractice} practice sign${nPractice > 1 ? 's' : ''}, then ${n} study sign${n > 1 ? 's' : ''}.` : `There are ${n} signs.`}</p>
     <div class="row"><button class="btn primary" id="go">Begin</button></div>`);
   await waitClick(document.getElementById('go'));
 }
 
-async function runTrials({ session, items, camera, tracker, refs, media }) {
-  for (let i = 0; i < items.length; i++) {
-    const item = items[i];
-    const trial = { index: i, item, startedAt: new Date().toISOString() };
-    screen(`<div class="trial-head"><span>Sign ${i + 1} of ${items.length}</span><span class="phase" id="ph">Watch</span></div><div id="stage"></div>`);
+async function runTrials({ session, items, practice, camera, tracker, refs, media, meaningTable, condition }) {
+  const all = [...practice, ...items];
+  for (let i = 0; i < all.length; i++) {
+    const item = all[i];
+    const isPractice = !!item.practice;
+    const k = isPractice ? i : i - practice.length; // index within its block
+    const label = isPractice ? `Practice ${k + 1} of ${practice.length}` : `Sign ${k + 1} of ${items.length}`;
+    const trial = { index: i, block: isPractice ? 'practice' : 'critical', blockIndex: k, item, startedAt: new Date().toISOString() };
+    screen(`<div class="trial-head"><span>${label}</span><span class="phase" id="ph">Watch</span></div><div id="stage"></div>`);
     const stage = document.getElementById('stage'), ph = document.getElementById('ph');
+
+    // 0) meaning page (separate from the video page)
+    if (cfg.meanings && cfg.meanings.enabled) {
+      const m = meaningFor(item, meaningTable || {}, condition, cfg.meanings.columns);
+      ph.textContent = 'Meaning';
+      stage.innerHTML = `<div class="meaning"><p class="muted">${esc(cfg.meanings.lead)}</p>
+        <p class="meaning-word">${esc(m.shown)}</p>
+        <div class="row"><button class="btn primary" id="mc">Continue</button></div></div>`;
+      const t0 = performance.now();
+      await waitClick(document.getElementById('mc'));
+      trial.meaning = { ...m, rtMs: Math.round(performance.now() - t0) };
+      stage.innerHTML = '';
+      ph.textContent = 'Watch';
+    }
 
     // 1) watch
     const player = new StimulusPlayer(cfg.stimulusPlayer).mount(stage);
@@ -195,19 +239,29 @@ async function runTrials({ session, items, camera, tracker, refs, media }) {
     trial.recording = { ...r, width: camera.width, height: camera.height };
 
     // 3) optional question
-    if (cfg.postTrialQuestion) trial.response = await askQuestion(stage, ph, cfg.postTrialQuestion);
+    if (cfg.postTrialQuestion && !isPractice) trial.response = await askQuestion(stage, ph, cfg.postTrialQuestion);
 
-    // similarity
-    const ref = refs.items[item.id];
-    try {
-      const sim = compareSequences(ref.frames, ref.width / ref.height, r.frames, camera.width / camera.height, cfg.similarity);
-      if (cfg.includeAlignmentInData && sim._path) sim.alignment = { path: sim._path, refTimes: sim._refTimes, partTimes: sim._partTimes };
-      trial.similarity = sim;
-    } catch (e) { trial.similarity = { score: null, error: String(e) }; }
+    // similarity (critical trials only; practice is not scored)
+    if (!isPractice) {
+      const ref = refs.items[item.id];
+      try {
+        const sim = compareSequences(ref.frames, ref.width / ref.height, r.frames, camera.width / camera.height, cfg.similarity);
+        if (cfg.includeAlignmentInData && sim._path) sim.alignment = { path: sim._path, refTimes: sim._refTimes, partTimes: sim._partTimes };
+        trial.similarity = sim;
+      } catch (e) { trial.similarity = { score: null, error: String(e) }; }
+    }
 
     trial.endedAt = new Date().toISOString();
     session.trials.push(trial);
     await backup(session);
+
+    // end of practice
+    if (isPractice && k === practice.length - 1 && items.length) {
+      screen(`<h2>Practice complete</h2>
+        <p>Well done. Now the real signs begin. There ${items.length > 1 ? `are ${items.length} signs` : 'is 1 sign'}, and they work exactly like the practice.</p>
+        <div class="row"><button class="btn primary" id="go">Start</button></div>`);
+      await waitClick(document.getElementById('go'));
+    }
   }
 }
 
@@ -233,8 +287,8 @@ async function finish(session, refs, camera, tracker, media) {
   await backup(session);
   screen(`
     <h1>Thank you!</h1>
-    <p>${cfg.isDemo ? 'The demo is complete. Your results are below. You can also download your movement data (numbers only) if you like.'
-      : `The study is complete. Please download the data file${cfg.showResultsToParticipant ? ' (your results are shown below)' : ''}.`}</p>
+    <p>${cfg.isDemo ? 'The demo is complete. Below you can compare your movements with the model signer\'s. You can also download your movement data (numbers only) if you like.'
+      : `The study is complete. Please download the data file${cfg.showResultsToParticipant ? '. Below you can compare your movements with the model signer\'s' : ''}.`}</p>
     <div class="row"><button class="btn primary" id="dl">Download data</button></div>
     <p class="muted small" id="dls"></p>
     <section id="res"></section>`);

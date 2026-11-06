@@ -1,0 +1,13 @@
+sign,sign_telicity,same_telicity,opposite_telicity,random_same_telicity,random_opposite_telicity
+die,telic,buy,think,drop,play
+leave,telic,sell,imagine,make,dance
+buy,telic,decide,float,build,hug
+sell,telic,forget,run,find,love
+decide,telic,die,discuss,break,ride
+forget,telic,leave,talk,open,swim
+float,atelic,discuss,forget,dance,break
+run,atelic,talk,sell,play,build
+discuss,atelic,imagine,leave,love,drop
+talk,atelic,think,decide,hug,open
+imagine,atelic,float,buy,swim,find
+think,atelic,run,die,ride,make

@@ -20,7 +20,7 @@
 <script type="module">
   import { CONFIG, applyUrlOverrides } from './js/config.js';
   import { ITEMS } from './js/stimuli.js';
-  import { createTracker } from './js/tracker.js';
+  import { createTracker, checkWebGL, WEBGL_HELP } from './js/tracker.js';
   import { computeReference, detectionStats } from './js/references.js';
   const cfg = applyUrlOverrides(CONFIG);
   const $ = (id) => document.getElementById(id);
@@ -28,6 +28,7 @@
   $('go').onclick = async () => {
     $('go').disabled = true;
     try {
+      if (!cfg.mock && !checkWebGL().ok) { $('log').innerHTML = WEBGL_HELP; $('st').textContent = 'WebGL unavailable.'; return; }
       $('st').textContent = 'Loading tracker…';
       const tracker = await createTracker(cfg.mediapipe, { mock: cfg.mock });
       out = { schema: 'sign-imitation-references/v1', createdAt: new Date().toISOString(), tracker: tracker.info,
