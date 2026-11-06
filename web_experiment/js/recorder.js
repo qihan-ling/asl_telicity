@@ -161,7 +161,7 @@ export class Recorder {
           vid.src = this._clipUrl; vid.hidden = false; msg.hidden = true;
           vid.play().catch(() => {});
           this.current.review = 'video';
-          status.textContent = `Your recording (${secs} s, shown only to you and not saved). ${advice}`;
+          status.textContent = `Your recording takes ${secs} s. ${advice}`;
         } else {
           this.current.review = 'none';
           msg.innerHTML = `<strong>Recorded ${secs} s</strong><span>${advice}</span>`;

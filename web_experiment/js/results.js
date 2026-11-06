@@ -12,7 +12,7 @@ const SETS = [
   { key: 'atelic', title: 'Set 2' },
 ];
 const TEXT = {
-  intro: 'Here you can compare your movements with the model signer\'s.',
+  intro: 'Here you can compare your movements with the video.',
   moreTitle: 'Telic and atelic signs',
   telic: (list) => `The <b>telic</b> signs you saw (${list}) involve a distinctive change in the hands, in their
     <b>shape</b>, <b>orientation</b> or <b>position</b>, from the beginning to the end of the sign.`,

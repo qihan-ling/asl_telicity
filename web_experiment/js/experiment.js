@@ -181,14 +181,14 @@ async function instructions(n, nPractice = 0) {
   screen(`
     <h2>Instructions</h2>
     <ol class="steps">
-      ${cfg.meanings && cfg.meanings.enabled ? '<li>Read what the next sign means, then press <b>Continue</b>.</li>' : ''}
+      ${cfg.meanings && cfg.meanings.enabled ? '<li>Read the meaning of the sign.</li>' : ''}
       <li>Watch the sign. ${watch}</li>
-      <li>Press <b>Start recording</b>. After a short countdown, copy the sign as closely as you can, then press <b>Stop</b>.</li>
-      <li>Watch your recording. Press <b>Start over</b> to record again, or <b>Confirm &amp; submit</b> to go on to the next sign.</li>
+      <li>Copy the sign. Press <b>Start recording</b>. After a short countdown, copy the sign as closely as you can, then press <b>Stop</b>.</li>
+      <li>Watch your recording. To record again, press <b>Start over</b>, or <b>Confirm &amp; submit</b> to go on to the next sign.</li>
     </ol>
     <div class="note">
-      <strong>What is saved</strong>
-      <p>No video or pictures of you are saved or sent anywhere. After each attempt, your recording is replayed to you
+      <strong>No video or pictures of you are saved or sent anywhere.</strong>
+      <p> After each attempt, your recording is replayed to you
         on this screen so you can check it; that clip exists only temporarily in this page and is deleted as soon as you
         press <b>Start over</b> or <b>Confirm &amp; submit</b>. While you sign, the page also computes the
         positions of points on your body and hands (for example your shoulders, elbows, wrists and finger joints)
@@ -196,7 +196,7 @@ async function instructions(n, nPractice = 0) {
         points that locate your head (nose, eyes, ears, mouth corners), but no image of your face is kept, and those points are not shown on screen.
         At the end you will see your movements as simple stick figures.</p>
     </div>
-    <p>${nPractice ? `You will start with ${nPractice} practice sign${nPractice > 1 ? 's' : ''}, then ${n} study sign${n > 1 ? 's' : ''}.` : `There are ${n} signs.`}</p>
+    <p>${nPractice ? `You will start with ${nPractice} practice sign${nPractice > 1 ? 's' : ''}.` : `There are ${n} signs.`}</p>
     <div class="row"><button class="btn primary" id="go">Begin</button></div>`);
   await waitClick(document.getElementById('go'));
 }
@@ -258,7 +258,7 @@ async function runTrials({ session, items, practice, camera, tracker, refs, medi
     // end of practice
     if (isPractice && k === practice.length - 1 && items.length) {
       screen(`<h2>Practice complete</h2>
-        <p>Well done. Now the real signs begin. There ${items.length > 1 ? `are ${items.length} signs` : 'is 1 sign'}, and they work exactly like the practice.</p>
+        <p>There are two more signs to go.</p>
         <div class="row"><button class="btn primary" id="go">Start</button></div>`);
       await waitClick(document.getElementById('go'));
     }
@@ -287,8 +287,8 @@ async function finish(session, refs, camera, tracker, media) {
   await backup(session);
   screen(`
     <h1>Thank you!</h1>
-    <p>${cfg.isDemo ? 'The demo is complete. Below you can compare your movements with the model signer\'s. You can also download your movement data (numbers only) if you like.'
-      : `The study is complete. Please download the data file${cfg.showResultsToParticipant ? '. Below you can compare your movements with the model signer\'s' : ''}.`}</p>
+    <p>${cfg.isDemo ? 'The demo is complete. You can also download your movement data (numbers only) if you like.'
+      : `The study is complete. Please download the data file${cfg.showResultsToParticipant ? '.' : ''}.`}</p>
     <div class="row"><button class="btn primary" id="dl">Download data</button></div>
     <p class="muted small" id="dls"></p>
     <section id="res"></section>`);
