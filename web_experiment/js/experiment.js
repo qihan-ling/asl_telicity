@@ -209,13 +209,12 @@ async function runTrials({ session, items, practice, camera, tracker, refs, medi
     const k = isPractice ? i : i - practice.length; // index within its block
     const label = isPractice ? `Practice ${k + 1} of ${practice.length}` : `Sign ${k + 1} of ${items.length}`;
     const trial = { index: i, block: isPractice ? 'practice' : 'critical', blockIndex: k, item, startedAt: new Date().toISOString() };
-    screen(`<div class="trial-head"><span>${label}</span><span class="phase" id="ph">Watch</span></div><div id="stage"></div>`);
-    const stage = document.getElementById('stage'), ph = document.getElementById('ph');
+    screen(`<div class="trial-head"><span>${label}</span></div><div id="stage"></div>`);
+    const stage = document.getElementById('stage');
 
     // 0) meaning page (separate from the video page)
     if (cfg.meanings && cfg.meanings.enabled) {
       const m = meaningFor(item, meaningTable || {}, condition, cfg.meanings.columns);
-      ph.textContent = 'Meaning';
       stage.innerHTML = `<div class="meaning"><p class="muted">${esc(cfg.meanings.lead)}</p>
         <p class="meaning-word">${esc(m.shown)}</p>
         <div class="row"><button class="btn primary" id="mc">Continue</button></div></div>`;
@@ -223,7 +222,6 @@ async function runTrials({ session, items, practice, camera, tracker, refs, medi
       await waitClick(document.getElementById('mc'));
       trial.meaning = { ...m, rtMs: Math.round(performance.now() - t0) };
       stage.innerHTML = '';
-      ph.textContent = 'Watch';
     }
 
     // 1) watch
@@ -232,14 +230,13 @@ async function runTrials({ session, items, practice, camera, tracker, refs, medi
     player.destroy();
 
     // 2) sign
-    ph.textContent = 'Your turn';
     const rec = new Recorder({ camera, tracker, cfg }).mount(stage);
     const r = await rec.run();
     rec.destroy();
     trial.recording = { ...r, width: camera.width, height: camera.height };
 
     // 3) optional question
-    if (cfg.postTrialQuestion && !isPractice) trial.response = await askQuestion(stage, ph, cfg.postTrialQuestion);
+    if (cfg.postTrialQuestion && !isPractice) trial.response = await askQuestion(stage, cfg.postTrialQuestion);
 
     // similarity (critical trials only; practice is not scored)
     if (!isPractice) {
@@ -265,8 +262,7 @@ async function runTrials({ session, items, practice, camera, tracker, refs, medi
   }
 }
 
-function askQuestion(stage, ph, q) {
-  ph.textContent = 'Question';
+function askQuestion(stage, q) {
   stage.innerHTML = `<label class="field block">${esc(q.prompt)}<textarea id="ans" rows="3"></textarea></label>
     <div class="row"><button class="btn primary" id="nx">Next</button></div>`;
   const t0 = performance.now();
